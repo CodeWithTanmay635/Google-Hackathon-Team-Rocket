@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>SmartRoad AI - Mission Control</title>
+    <link rel="icon" href="data:," />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&amp;family=IBM+Plex+Sans:wght@300;400;500&amp;family=IBM+Plex+Mono:wght@400;500&amp;family=Space+Grotesk:wght@300;400;700&amp;family=Inter:wght@300;400;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#00783a",
+                        "inverse-on-surface": "#26313f",
+                        "secondary": "#a2e7ff",
+                        "on-surface-variant": "#c1c6d5",
+                        "on-background": "#d8e3f6",
+                        "tertiary-fixed": "#62ff96",
+                        "surface": "#091421",
+                        "error": "#ffb4ab",
+                        "on-secondary-fixed": "#001f27",
+                        "surface-tint": "#aac7ff",
+                        "on-tertiary-fixed-variant": "#005226",
+                        "primary-fixed-dim": "#aac7ff",
+                        "on-secondary-container": "#005669",
+                        "surface-bright": "#2f3a49",
+                        "outline": "#8b919e",
+                        "on-primary-fixed-variant": "#00458e",
+                        "surface-variant": "#2b3544",
+                        "surface-container-high": "#202b39",
+                        "primary": "#aac7ff",
+                        "error-container": "#93000a",
+                        "primary-fixed": "#d7e3ff",
+                        "surface-container-low": "#111c2a",
+                        "surface-dim": "#091421",
+                        "secondary-fixed": "#b4ebff",
+                        "surface-container": "#16202e",
+                        "inverse-primary": "#005cba",
+                        "on-primary": "#002f65",
+                        "surface-container-highest": "#2b3544",
+                        "tertiary": "#00e475",
+                        "secondary-fixed-dim": "#3cd7ff",
+                        "on-secondary-fixed-variant": "#004e5f",
+                        "outline-variant": "#414753",
+                        "on-surface": "#d8e3f6",
+                        "on-tertiary": "#003918",
+                        "inverse-surface": "#d8e3f6",
+                        "on-error": "#690005",
+                        "secondary-container": "#00d2fd",
+                        "surface-container-lowest": "#040f1c",
+                        "tertiary-fixed-dim": "#00e475",
+                        "on-tertiary-fixed": "#00210b",
+                        "on-tertiary-container": "#8fffab",
+                        "on-secondary": "#003642",
+                        "on-error-container": "#ffdad6",
+                        "on-primary-container": "#dfe8ff",
+                        "on-primary-fixed": "#001b3e",
+                        "primary-container": "#0066cc",
+                        "background": "#091421"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Rajdhani", "sans-serif"],
+                        "body": ["IBM Plex Sans", "sans-serif"],
+                        "label": ["IBM Plex Mono", "monospace"],
+                        "system": ["Inter", "sans-serif"]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .grid-overlay {
+            background-image: linear-gradient(rgba(65, 71, 83, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(65, 71, 83, 0.05) 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
+
+        .text-gradient-blue {
+            background: linear-gradient(to right, #aac7ff, #a2e7ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-glow {
+            box-shadow: 0 0 100px -20px rgba(0, 102, 204, 0.15);
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body class="bg-background text-on-background font-body selection:bg-primary/30 scroll-smooth">
+    <!-- Top Navigation Shell -->
+    <header
+        class="bg-[#091421]/70 backdrop-blur-xl fixed top-0 w-full z-50 border-b border-[#0066cc]/30 flex justify-between items-center px-8 h-16 transition-all duration-300 ease-in-out">
+        <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary text-2xl" data-icon="add_road">add_road</span>
+            <span class="text-2xl font-bold text-[#d8e3f6] font-['Rajdhani'] uppercase tracking-wider">SmartRoad
+                AI</span>
+        </div>
+        <nav class="hidden md:flex gap-8 font-['IBM_Plex_Mono'] text-xs uppercase tracking-widest">
+            <a class="text-[#0066cc] border-b-2 border-[#0066cc] pb-1 font-bold" href="stich.html">Home</a>
+            <a class="text-[#d8e3f6]/60 hover:text-[#aac7ff] transition-colors" href="Analyer.html">Detect</a>
+            <a class="text-[#d8e3f6]/60 hover:text-[#aac7ff] transition-colors" href="live.html">Live</a>
+            <a class="text-[#d8e3f6]/60 hover:text-[#aac7ff] transition-colors" href="Traffic_predictor.html">Traffic</a>
+            <a class="text-[#d8e3f6]/60 hover:text-[#aac7ff] transition-colors" href="reports_tracker.html">Reports</a>
+        </nav>
+        <button
+            class="bg-primary-container text-on-primary-container px-4 py-1.5 text-[10px] font-['IBM_Plex_Mono'] tracking-widest rounded-lg hover:brightness-110 transition-all border border-primary/20">
+            SYSTEM ONLINE
+        </button>
+    </header>
+    <main class="grid-overlay pt-16 min-h-screen">
+        <!-- Hero Section -->
+        <section class="relative container mx-auto px-6 pt-24 pb-32 flex flex-col items-center text-center">
+            <!-- Badge -->
+            <div
+                class="inline-flex items-center gap-3 bg-surface-container-lowest/50 border border-outline-variant/30 px-4 py-1.5 rounded-full mb-12 backdrop-blur-sm">
+                <span class="w-2 h-2 rounded-full bg-tertiary animate-pulse shadow-[0_0_8px_#00e475]"></span>
+                <span
+                    class="font-['IBM_Plex_Mono'] text-[10px] tracking-[0.2em] text-secondary font-medium uppercase">AI-POWERED
+                    CIVIC INFRASTRUCTURE MONITORING</span>
+            </div>
+            <!-- Heading -->
+            <h1
+                class="font-headline text-7xl md:text-9xl font-bold leading-tight uppercase tracking-tighter mb-6 hero-glow">
+                INTELLIGENT <br />
+                <span class="text-gradient-blue">ROAD INTELLIGENCE</span>
+            </h1>
+            <!-- Subtitle -->
+            <p class="max-w-2xl text-on-surface-variant/80 text-lg md:text-xl font-light mb-12 leading-relaxed">
+                Empowering urban environments with real-time computer vision detection. Monitor, analyze, and report
+                infrastructure anomalies with surgical precision.
+            </p>
+            <!-- CTAs -->
+            <div class="flex flex-col sm:flex-row gap-6">
+                <button onclick="window.location.href='live.html'"
+                    class="flex items-center gap-3 bg-gradient-to-b from-primary to-primary-container text-on-primary font-headline font-bold uppercase tracking-widest px-8 py-4 rounded-lg shadow-lg hover:shadow-primary/20 transition-all">
+                    <span class="material-symbols-outlined text-xl" data-icon="videocam">videocam</span>
+                    Start Live Monitor
+                </button>
+                <button onclick="window.location.href='Analyer.html'"
+                    class="flex items-center gap-3 border border-outline-variant/40 hover:border-primary/50 text-on-surface font-headline font-bold uppercase tracking-widest px-8 py-4 rounded-lg backdrop-blur-md transition-all">
+                    <span class="material-symbols-outlined text-xl" data-icon="photo_library">photo_library</span>
+                    Upload and Detect
+                </button>
+            </div>
+        </section>
+        <!-- Stats Strip -->
+        <section class="bg-surface-container-lowest/80 border-y border-outline-variant/10 py-10">
+            <div class="container mx-auto px-6">
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-8">
+                    <div class="flex flex-col items-center md:items-start">
+                        <span class="font-['IBM_Plex_Mono'] text-secondary text-4xl font-bold mb-1">96%</span>
+                        <span class="font-['IBM_Plex_Mono'] text-[10px] tracking-widest text-outline uppercase">//
+                            ACCURACY_RATING</span>
+                    </div>
+                    <div class="flex flex-col items-center md:items-start">
+                        <span class="font-['IBM_Plex_Mono'] text-secondary text-4xl font-bold mb-1">YOLOv11</span>
+                        <span class="font-['IBM_Plex_Mono'] text-[10px] tracking-widest text-outline uppercase">//
+                            AI_MODEL</span>
+                    </div>
+                    <div class="flex flex-col items-center md:items-start">
+                        <span class="font-['IBM_Plex_Mono'] text-secondary text-4xl font-bold mb-1">&lt;1s</span>
+                        <span class="font-['IBM_Plex_Mono'] text-[10px] tracking-widest text-outline uppercase">//
+                            RESPONSE_TIME</span>
+                    </div>
+                    <div class="flex flex-col items-center md:items-start">
+                        <span class="font-['IBM_Plex_Mono'] text-secondary text-4xl font-bold mb-1">24/7</span>
+                        <span class="font-['IBM_Plex_Mono'] text-[10px] tracking-widest text-outline uppercase">//
+                            MONITORING_UPTIME</span>
+                    </div>
+                    <div class="flex flex-col items-center md:items-start">
+                        <span class="font-['IBM_Plex_Mono'] text-secondary text-4xl font-bold mb-1">AUTO</span>
+                        <span class="font-['IBM_Plex_Mono'] text-[10px] tracking-widest text-outline uppercase">//
+                            REPORT_GEN</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Feature Cards Grid -->
+        <section class="container mx-auto px-6 py-32">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Card 01 -->
+                <div
+                    class="group relative bg-surface-container p-10 rounded-xl hover:-translate-y-2 transition-all duration-300 hover:shadow-[0_20px_40px_-20px_rgba(0,102,204,0.3)] border-l-0 hover:border-l-4 hover:border-primary-container">
+                    <div class="flex justify-between items-start mb-8">
+                        <div class="bg-surface-container-high p-4 rounded-lg">
+                            <span class="material-symbols-outlined text-primary text-3xl"
+                                data-icon="videocam">videocam</span>
+                        </div>
+                        <span class="font-['IBM_Plex_Mono'] text-xs text-outline tracking-tighter">MOD_01</span>
+                    </div>
+                    <h3 class="font-headline text-3xl font-bold mb-4 uppercase">Live Camera Detection</h3>
+                    <p class="text-on-surface-variant font-light mb-6">Real-time edge processing for surveillance
+                        streams. Identify road hazards, illegal parking, and infrastructure decay as it happens.</p>
+                    <div class="w-full h-1 bg-outline-variant/10 group-hover:bg-primary/20 transition-all"></div>
+                </div>
+                <!-- Card 02 -->
+                <div
+                    class="group relative bg-surface-container p-10 rounded-xl hover:-translate-y-2 transition-all duration-300 hover:shadow-[0_20px_40px_-20px_rgba(0,102,204,0.3)] border-l-0 hover:border-l-4 hover:border-primary-container">
+                    <div class="flex justify-between items-start mb-8">
+                        <div class="bg-surface-container-high p-4 rounded-lg">
+                            <span class="material-symbols-outlined text-primary text-3xl"
+                                data-icon="upload_file">upload_file</span>
+                        </div>
+                        <span class="font-['IBM_Plex_Mono'] text-xs text-outline tracking-tighter">MOD_02</span>
+                    </div>
+                    <h3 class="font-headline text-3xl font-bold mb-4 uppercase">Upload &amp; Detect</h3>
+                    <p class="text-on-surface-variant font-light mb-6">Batch processing for mobile captures and
+                        citizen-submitted photos. High-fidelity classification for pothole and debris analysis.</p>
+                    <div class="w-full h-1 bg-outline-variant/10 group-hover:bg-primary/20 transition-all"></div>
+                </div>
+                <!-- Card 03 -->
+                <div
+                    class="group relative bg-surface-container p-10 rounded-xl hover:-translate-y-2 transition-all duration-300 hover:shadow-[0_20px_40px_-20px_rgba(0,102,204,0.3)] border-l-0 hover:border-l-4 hover:border-primary-container">
+                    <div class="flex justify-between items-start mb-8">
+                        <div class="bg-surface-container-high p-4 rounded-lg">
+                            <span class="material-symbols-outlined text-primary text-3xl"
+                                data-icon="traffic">traffic</span>
+                        </div>
+                        <span class="font-['IBM_Plex_Mono'] text-xs text-outline tracking-tighter">MOD_03</span>
+                    </div>
+                    <h3 class="font-headline text-3xl font-bold mb-4 uppercase">Traffic Predictor</h3>
+                    <p class="text-on-surface-variant font-light mb-6">Neural network forecasting for urban density.
+                        Predict bottlenecks and optimize signal timing based on object flow metrics.</p>
+                    <div class="w-full h-1 bg-outline-variant/10 group-hover:bg-primary/20 transition-all"></div>
+                </div>
+                <!-- Card 04 -->
+                <div
+                    class="group relative bg-surface-container p-10 rounded-xl hover:-translate-y-2 transition-all duration-300 hover:shadow-[0_20px_40px_-20px_rgba(0,102,204,0.3)] border-l-0 hover:border-l-4 hover:border-primary-container">
+                    <div class="flex justify-between items-start mb-8">
+                        <div class="bg-surface-container-high p-4 rounded-lg">
+                            <span class="material-symbols-outlined text-primary text-3xl"
+                                data-icon="assignment">assignment</span>
+                        </div>
+                        <span class="font-['IBM_Plex_Mono'] text-xs text-outline tracking-tighter">MOD_04</span>
+                    </div>
+                    <h3 class="font-headline text-3xl font-bold mb-4 uppercase">Civic Reports</h3>
+                    <p class="text-on-surface-variant font-light mb-6">Automated documentation for municipal
+                        stakeholders. Generate geolocated PDF dossiers for rapid dispatch of maintenance crews.</p>
+                    <div class="w-full h-1 bg-outline-variant/10 group-hover:bg-primary/20 transition-all"></div>
+                </div>
+            </div>
+        </section>
+        <!-- How It Works Section -->
+        <section class="container mx-auto px-6 py-32 overflow-hidden">
+            <h2 class="font-headline text-5xl font-bold text-center uppercase tracking-wider mb-24">Processing Protocol
+            </h2>
+            <div class="relative">
+                <!-- Connection Line -->
+                <div
+                    class="absolute top-1/2 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary-container/40 to-transparent -translate-y-1/2 hidden md:block">
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-12 relative">
+                    <!-- Step 01 -->
+                    <div class="flex flex-col items-center text-center group">
+                        <div
+                            class="w-16 h-16 bg-surface-container-highest border-2 border-primary/20 rounded-full flex items-center justify-center font-['IBM_Plex_Mono'] text-primary mb-8 group-hover:scale-110 group-hover:border-primary transition-all z-10 bg-background shadow-[0_0_20px_rgba(170,199,255,0.1)]">
+                            01
+                        </div>
+                        <h4 class="font-headline text-xl font-bold uppercase mb-2 tracking-wide">Camera Input</h4>
+                        <p class="text-on-surface-variant text-sm font-light leading-relaxed">Stream ingestion from
+                            global <br />CCTV network nodes.</p>
+                    </div>
+                    <!-- Step 02 -->
+                    <div class="flex flex-col items-center text-center group">
+                        <div
+                            class="w-16 h-16 bg-surface-container-highest border-2 border-primary/20 rounded-full flex items-center justify-center font-['IBM_Plex_Mono'] text-primary mb-8 group-hover:scale-110 group-hover:border-primary transition-all z-10 bg-background shadow-[0_0_20px_rgba(170,199,255,0.1)]">
+                            02
+                        </div>
+                        <h4 class="font-headline text-xl font-bold uppercase mb-2 tracking-wide">AI Detection</h4>
+                        <p class="text-on-surface-variant text-sm font-light leading-relaxed">Deep learning inference
+                            <br />engine triggers scanning.</p>
+                    </div>
+                    <!-- Step 03 -->
+                    <div class="flex flex-col items-center text-center group">
+                        <div
+                            class="w-16 h-16 bg-surface-container-highest border-2 border-primary/20 rounded-full flex items-center justify-center font-['IBM_Plex_Mono'] text-primary mb-8 group-hover:scale-110 group-hover:border-primary transition-all z-10 bg-background shadow-[0_0_20px_rgba(170,199,255,0.1)]">
+                            03
+                        </div>
+                        <h4 class="font-headline text-xl font-bold uppercase mb-2 tracking-wide">Alert &amp; Report</h4>
+                        <p class="text-on-surface-variant text-sm font-light leading-relaxed">Instant classification and
+                            <br />vector-mapping of issues.</p>
+                    </div>
+                    <!-- Step 04 -->
+                    <div class="flex flex-col items-center text-center group">
+                        <div
+                            class="w-16 h-16 bg-surface-container-highest border-2 border-primary/20 rounded-full flex items-center justify-center font-['IBM_Plex_Mono'] text-primary mb-8 group-hover:scale-110 group-hover:border-primary transition-all z-10 bg-background shadow-[0_0_20px_rgba(170,199,255,0.1)]">
+                            04
+                        </div>
+                        <h4 class="font-headline text-xl font-bold uppercase mb-2 tracking-wide">Civic Action</h4>
+                        <p class="text-on-surface-variant text-sm font-light leading-relaxed">Automated dispatch to
+                            <br />local municipal teams.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer Shell -->
+    <footer
+        class="bg-[#040f1c] w-full py-4 border-t border-[#414753]/10 flex justify-between px-12 items-center font-['IBM_Plex_Mono'] text-[10px] tracking-tighter text-[#0066cc]">
+        <div class="opacity-70">
+            © 2024 SMARTROAD AI // MISSION CRITICAL SYSTEMS
+        </div>
+        <div class="flex gap-8">
+            <a class="text-[#414753] hover:text-[#0066cc] opacity-70 hover:opacity-100 transition-all" href="#">Status:
+                Nominal</a>
+            <a class="text-[#414753] hover:text-[#0066cc] opacity-70 hover:opacity-100 transition-all" href="#">Terminal
+                Access</a>
+            <a class="text-[#414753] hover:text-[#0066cc] opacity-70 hover:opacity-100 transition-all" href="#">Protocol
+                v4.2</a>
+        </div>
+    </footer>
+</body>
+
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reports — SmartRoad AI</title>
+    <link rel="icon" href="data:," />
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#020b18; --blue-accent:#0066cc; --blue-bright:#1a8fff;
+    --cyan:#00d4ff; --white:#f0f6ff; --white-dim:#8aa8c8;
+    --red-alert:#ff3b3b; --green-ok:#00e676; --yellow-warn:#ffcc00;
+    --border:rgba(0,153,255,0.2); --card-bg:rgba(4,20,40,0.85);
+    --grid-color:rgba(0,102,204,0.08);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--navy); color:var(--white); font-family:'IBM Plex Sans',sans-serif; min-height:100vh; }
+  body::before { content:''; position:fixed; inset:0; background-image:linear-gradient(var(--grid-color) 1px,transparent 1px),linear-gradient(90deg,var(--grid-color) 1px,transparent 1px); background-size:40px 40px; pointer-events:none; z-index:0; }
+  nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:0 48px; height:64px; background:rgba(2,11,24,0.95); border-bottom:1px solid var(--border); backdrop-filter:blur(12px); }
+  .nav-logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .nav-logo-icon { width:32px; height:32px; background:var(--blue-accent); border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:16px; }
+  .nav-logo-text { font-family:'Rajdhani',sans-serif; font-size:20px; font-weight:700; color:var(--white); letter-spacing:1px; }
+  .nav-logo-text span { color:var(--cyan); }
+  .nav-links { display:flex; gap:4px; }
+  .nav-links a { color:var(--white-dim); text-decoration:none; font-size:13px; font-weight:500; padding:6px 14px; border-radius:4px; transition:all 0.2s; letter-spacing:0.5px; text-transform:uppercase; }
+  .nav-links a:hover,.nav-links a.active { color:var(--white); background:rgba(0,102,204,0.2); }
+  .nav-status { display:flex; align-items:center; gap:8px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--green-ok); }
+  .nav-status::before { content:''; width:8px; height:8px; background:var(--green-ok); border-radius:50%; animation:pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.5} }
+  .page { position:relative; z-index:1; padding:100px 48px 80px; max-width:1100px; margin:0 auto; }
+  .page-header { margin-bottom:48px; }
+  .page-label { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--blue-bright); text-transform:uppercase; letter-spacing:3px; margin-bottom:12px; }
+  .page-title { font-family:'Rajdhani',sans-serif; font-size:48px; font-weight:700; line-height:1; margin-bottom:12px; }
+  .page-title span { color:var(--cyan); }
+  .page-subtitle { font-size:15px; color:var(--white-dim); line-height:1.6; }
+
+  .reports-info {
+    background:rgba(0,102,204,0.08); border:1px solid var(--border);
+    border-radius:8px; padding:32px; text-align:center;
+  }
+  .reports-info-icon { font-size:64px; margin-bottom:20px; display:block; }
+  .reports-info-title { font-family:'Rajdhani',sans-serif; font-size:28px; font-weight:700; margin-bottom:12px; }
+  .reports-info-text { font-size:14px; color:var(--white-dim); line-height:1.8; max-width:600px; margin:0 auto 28px; }
+
+  .reports-path {
+    display:inline-block; background:rgba(0,212,255,0.08);
+    border:1px solid rgba(0,212,255,0.3); border-radius:6px;
+    padding:12px 24px; font-family:'IBM Plex Mono',monospace;
+    font-size:14px; color:var(--cyan); margin-bottom:32px;
+    letter-spacing:0.5px;
+  }
+
+  .report-format {
+    background:rgba(2,11,24,0.8); border:1px solid var(--border);
+    border-radius:8px; padding:24px 32px; text-align:left;
+    font-family:'IBM Plex Mono',monospace; font-size:12px;
+    color:var(--white-dim); line-height:2; max-width:700px;
+    margin:0 auto 28px; white-space:pre;
+  }
+
+  .report-format .highlight { color:var(--cyan); }
+  .report-format .alert-text { color:var(--red-alert); }
+  .report-format .ok-text { color:var(--green-ok); }
+
+  .sample-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:40px; }
+  .sample-card { background:var(--card-bg); border:1px solid var(--border); border-radius:6px; padding:20px; text-align:left; }
+  .sample-card-id { font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--blue-bright); margin-bottom:8px; }
+  .sample-card-title { font-family:'Rajdhani',sans-serif; font-size:18px; font-weight:700; margin-bottom:8px; }
+  .sample-card-meta { font-size:12px; color:var(--white-dim); line-height:1.6; }
+  .sample-card-status { display:inline-block; margin-top:12px; font-size:10px; font-family:'IBM Plex Mono',monospace; padding:3px 10px; border-radius:3px; text-transform:uppercase; letter-spacing:1px; background:rgba(255,59,59,0.15); color:var(--red-alert); border:1px solid rgba(255,59,59,0.3); }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">🛣️</div>
+    <span class="nav-logo-text">Smart<span>Road</span> AI</span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="detect.html">Detect</a>
+    <a href="monitor.html">Live</a>
+    <a href="traffic.html">Traffic</a>
+    <a href="reports.html" class="active">Reports</a>
+  </div>
+  <div class="nav-status">SYSTEM ONLINE</div>
+</nav>
+
+<div class="page">
+  <div class="page-header">
+    <div class="page-label">// Module 04</div>
+    <h1 class="page-title">Civic <span>Reports</span></h1>
+    <p class="page-subtitle">Auto-generated complaint reports with unique IDs, ready for Municipal Corporation submission.</p>
+  </div>
+
+  <div class="reports-info">
+    <span class="reports-info-icon">📋</span>
+    <div class="reports-info-title">Reports Auto-Saved Locally</div>
+    <p class="reports-info-text">
+      Every time a pothole is detected — through live monitoring or image upload — SmartRoad AI automatically generates a civic complaint report with a unique Report ID, timestamp, severity level, and detection details.
+    </p>
+    <div class="reports-path">📁 E:\SmartRoad AI\Backend\reports\</div>
+
+    <div class="report-format"><span class="highlight">╔══════════════════════════════════════════╗
+         SMARTROAD AI - CIVIC COMPLAINT REPORT
+╚══════════════════════════════════════════╝</span>
+
+Report ID     : <span class="highlight">SR-20260314195829</span>
+Generated At  : 2026-03-14 19:58:29
+Location      : Solapur, Maharashtra
+
+<span class="alert-text">Damage Found  : YES ⚠️
+Total         : 6 POTHOLES DETECTED
+Overall       : HIGH - Immediate attention required</span>
+
+Reported Via  : SmartRoad AI System
+Authority     : Municipal Corporation
+Status        : <span class="alert-text">PENDING ACTION</span></div>
+
+    <div class="sample-cards">
+      <div class="sample-card">
+        <div class="sample-card-id">SR-20260314085329</div>
+        <div class="sample-card-title">⚠️ 6 Potholes</div>
+        <div class="sample-card-meta">Market Chowk, Solapur<br>14 Mar 2026 · 08:53 AM<br>Severity: HIGH</div>
+        <span class="sample-card-status">Pending Action</span>
+      </div>
+      <div class="sample-card">
+        <div class="sample-card-id">SR-20260314085333</div>
+        <div class="sample-card-title">⚠️ 4 Potholes</div>
+        <div class="sample-card-meta">NH9 Bypass, Solapur<br>14 Mar 2026 · 08:53 AM<br>Severity: HIGH</div>
+        <span class="sample-card-status">Pending Action</span>
+      </div>
+      <div class="sample-card">
+        <div class="sample-card-id">SR-20260314090102</div>
+        <div class="sample-card-title">⚠️ 2 Potholes</div>
+        <div class="sample-card-meta">Hotgi Road, Solapur<br>14 Mar 2026 · 09:01 AM<br>Severity: MEDIUM</div>
+        <span class="sample-card-status">Pending Action</span>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

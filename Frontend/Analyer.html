@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link rel="icon" href="data:," />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&amp;family=IBM+Plex+Sans:wght@300;400;500&amp;family=IBM+Plex+Mono:wght@400;500&amp;family=Space+Grotesk:wght@400;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#00783a",
+                        "inverse-on-surface": "#26313f",
+                        "secondary": "#a2e7ff",
+                        "on-surface-variant": "#c1c6d5",
+                        "on-background": "#d8e3f6",
+                        "tertiary-fixed": "#62ff96",
+                        "surface": "#091421",
+                        "error": "#ffb4ab",
+                        "on-secondary-fixed": "#001f27",
+                        "surface-tint": "#aac7ff",
+                        "on-tertiary-fixed-variant": "#005226",
+                        "primary-fixed-dim": "#aac7ff",
+                        "on-secondary-container": "#005669",
+                        "surface-bright": "#2f3a49",
+                        "outline": "#8b919e",
+                        "on-primary-fixed-variant": "#00458e",
+                        "surface-variant": "#2b3544",
+                        "surface-container-high": "#202b39",
+                        "primary": "#aac7ff",
+                        "error-container": "#93000a",
+                        "primary-fixed": "#d7e3ff",
+                        "surface-container-low": "#111c2a",
+                        "surface-dim": "#091421",
+                        "secondary-fixed": "#b4ebff",
+                        "surface-container": "#16202e",
+                        "inverse-primary": "#005cba",
+                        "on-primary": "#002f65",
+                        "surface-container-highest": "#2b3544",
+                        "tertiary": "#00e475",
+                        "secondary-fixed-dim": "#3cd7ff",
+                        "on-secondary-fixed-variant": "#004e5f",
+                        "outline-variant": "#414753",
+                        "on-surface": "#d8e3f6",
+                        "on-tertiary": "#003918",
+                        "inverse-surface": "#d8e3f6",
+                        "on-error": "#690005",
+                        "secondary-container": "#00d2fd",
+                        "surface-container-lowest": "#040f1c",
+                        "tertiary-fixed-dim": "#00e475",
+                        "on-tertiary-fixed": "#00210b",
+                        "on-tertiary-container": "#8fffab",
+                        "on-secondary": "#003642",
+                        "on-error-container": "#ffdad6",
+                        "on-primary-container": "#dfe8ff",
+                        "on-primary-fixed": "#001b3e",
+                        "primary-container": "#0066cc",
+                        "background": "#091421"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Rajdhani", "sans-serif"],
+                        "body": ["IBM Plex Sans", "sans-serif"],
+                        "mono": ["IBM Plex Mono", "monospace"],
+                        "label": ["Space Grotesk", "sans-serif"]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            background-color: #091421;
+            background-image: radial-gradient(#414753 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+            color: #d8e3f6;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body class="font-body selection:bg-primary-container/30">
+    <!-- TopAppBar -->
+    <header
+        class="fixed top-0 w-full z-50 bg-[#091421]/70 backdrop-blur-xl border-b border-[#0066cc]/30 flex justify-between items-center px-8 h-16 w-full">
+        <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-[#aac7ff]" data-icon="add_road">add_road</span>
+            <span class="text-2xl font-bold text-[#d8e3f6] font-['Rajdhani'] uppercase tracking-wider">SmartRoad
+                AI</span>
+        </div>
+        <nav class="hidden md:flex gap-8">
+            <a class="text-[#d8e3f6]/40 hover:text-[#aac7ff] transition-colors font-['IBM_Plex_Mono'] text-xs uppercase tracking-widest transition-all duration-300 ease-in-out"
+                href="stich.html">Home</a>
+            <a class="text-[#0066cc] border-b-2 border-[#0066cc] pb-1 font-bold font-['IBM_Plex_Mono'] text-xs uppercase tracking-widest transition-all duration-300 ease-in-out"
+                href="Analyer.html">Detect</a>
+            <a class="text-[#d8e3f6]/60 hover:text-[#aac7ff] transition-colors font-['IBM_Plex_Mono'] text-xs uppercase tracking-widest transition-all duration-300 ease-in-out"
+                href="live.html">Live</a>
+            <a class="text-[#d8e3f6]/60 hover:text-[#aac7ff] transition-colors font-['IBM_Plex_Mono'] text-xs uppercase tracking-widest transition-all duration-300 ease-in-out"
+                href="Traffic_predictor.html">Traffic</a>
+            <a class="text-[#d8e3f6]/60 hover:text-[#aac7ff] transition-colors font-['IBM_Plex_Mono'] text-xs uppercase tracking-widest transition-all duration-300 ease-in-out"
+                href="reports_tracker.html">Reports</a>
+        </nav>
+        <div
+            class="flex items-center gap-2 px-3 py-1 bg-primary-container/10 border border-primary-container/30 rounded">
+            <span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+            <span class="text-[10px] font-mono text-[#aac7ff] tracking-tighter">SYSTEM ONLINE</span>
+        </div>
+    </header>
+    <main class="pt-24 pb-12 px-6 md:px-12 max-w-7xl mx-auto">
+        <!-- Hero Header -->
+        <div class="mb-12">
+            <p class="font-mono text-xs text-primary mb-2 tracking-[0.2em] uppercase">// IMAGE_RECOGNITION_MODULE</p>
+            <h1 class="text-5xl font-headline font-bold text-on-background tracking-tight uppercase">Analyze Road
+                Infrastructure</h1>
+        </div>
+        <!-- Layout Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Left Column: Upload Card -->
+            <section class="bg-surface-container-low rounded-lg p-8 relative overflow-hidden flex flex-col gap-6">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-headline font-semibold flex items-center gap-2">
+                        Upload Road Image 📷
+                    </h2>
+                    <span class="font-mono text-[10px] text-outline-variant uppercase">// STEP_01_INPUT</span>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label class="font-mono text-[10px] text-outline-variant uppercase tracking-widest">//
+                        LOCATION_DATA</label>
+                    <input id="analyzer-location"
+                        class="bg-surface-container-lowest border-none border-b border-outline-variant/30 focus:border-secondary focus:ring-0 text-on-surface py-3 px-4 transition-all"
+                        placeholder="e.g. Market Chowk, Solapur" type="text" />
+                </div>
+                <!-- Upload Zone -->
+                <input type="file" id="image-upload" accept=".jpg,.jpeg,.png" class="hidden" />
+                <div id="drop-zone" onclick="document.getElementById('image-upload').click()" class="border-2 border-dashed border-outline-variant/30 hover:border-primary/50 hover:bg-surface-container-high/50 rounded-lg p-8 flex flex-col items-center justify-center cursor-pointer transition-all group">
+                    <div
+                        class="w-16 h-16 rounded-full bg-primary-container/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <span class="material-symbols-outlined text-primary text-3xl"
+                            data-icon="cloud_upload">cloud_upload</span>
+                    </div>
+                    <p class="text-on-surface font-headline text-lg mb-2">Click to upload or drag and drop</p>
+                    <p class="font-mono text-xs text-outline tracking-wider">JPG, PNG SUPPORTED</p>
+                </div>
+                <button id="run-detection-btn"
+                    class="w-full bg-gradient-to-b from-primary to-primary-container text-on-primary py-4 rounded-lg font-headline font-bold tracking-[0.15em] hover:shadow-[0_0_20px_rgba(0,102,204,0.4)] transition-all uppercase disabled:opacity-50">
+                    RUN DETECTION
+                </button>
+            </section>
+            <!-- Right Column: Results Card -->
+            <section class="bg-surface-container rounded-lg p-8 flex flex-col gap-6">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-headline font-semibold">Detection Results</h2>
+                    <span class="font-mono text-[10px] text-outline-variant uppercase">// STEP_02_ANALYSIS</span>
+                </div>
+                <!-- Result Banner -->
+                <div id="result-banner" class="hidden bg-error-container/20 border border-error/30 p-4 flex items-center gap-4">
+                    <div id="result-icon-bg" class="w-10 h-10 bg-error/10 flex items-center justify-center rounded">
+                        <span id="result-icon" class="material-symbols-outlined text-error" data-icon="warning">warning</span>
+                    </div>
+                    <div>
+                        <p id="result-title" class="font-headline font-bold text-error tracking-wider uppercase">POTHOLE DETECTED: 3 FOUND</p>
+                        <p id="result-subtitle" class="font-mono text-[10px] text-error/70 tracking-tight">ANALYSIS COMPLETED IN 480MS</p>
+                    </div>
+                </div>
+                <!-- Image Preview Placeholder -->
+                <div class="aspect-video bg-surface-container-lowest rounded-lg overflow-hidden relative">
+                    <img id="preview-image" alt="Road Analysis" class="w-full h-full object-cover opacity-60"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDubuuU3yWEiwvSpKDI14-_nCb9c_V7XxKf5qzxB7AjA-sDOoksiBRS2rFkLvOaepG2UUeXqgo8DMoi8-gpyOG22XCZro0Hosy-o2gKFWKDh8d0m5tOiTDyuECaFI6LI7jxbccWAe1czmXMBZ3ppE-8eHYfq3E2_Ocm3-OmbmgnYHGyYbY2mh8nUuuZh4v_ClO7OdVd2eURtBoZGRnt1zBfMo_yIo-CSl7nr-W16P9Bb2C0-knTQnS4hoBAdu2Ith3I6sDQPEftp-4" />
+                </div>
+                <!-- Detection List -->
+                <div id="detection-list" class="flex flex-col gap-5">
+                    <div class="text-on-surface-variant font-mono text-sm">Awaiting image upload...</div>
+                </div>
+                <button id="generate-report-btn" style="display: none;"
+                    class="mt-auto border border-secondary text-secondary py-3 rounded-lg font-headline font-bold tracking-[0.1em] hover:bg-secondary/10 transition-all uppercase">
+                    GENERATE CIVIC REPORT
+                </button>
+            </section>
+        </div>
+    </main>
+    <!-- NavigationDrawer (Suppressed based on context of sub-page, but listed in JSON - using it for mobile-only bottom nav layout as per responsive pivot) -->
+    <div
+        class="md:hidden fixed bottom-0 left-0 w-full bg-[#040f1c] border-t border-[#414753]/10 h-16 flex items-center justify-around z-50">
+        <div class="flex flex-col items-center gap-1 text-[#d8e3f6]/40">
+            <span class="material-symbols-outlined" data-icon="home">home</span>
+            <span class="font-['IBM_Plex_Mono'] text-[8px] uppercase">Home</span>
+        </div>
+        <div class="flex flex-col items-center gap-1 text-[#aac7ff] border-t-2 border-[#0066cc] pt-1">
+            <span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+            <span class="font-['IBM_Plex_Mono'] text-[8px] uppercase">Detect</span>
+        </div>
+        <div class="flex flex-col items-center gap-1 text-[#d8e3f6]/40">
+            <span class="material-symbols-outlined" data-icon="sensors">sensors</span>
+            <span class="font-['IBM_Plex_Mono'] text-[8px] uppercase">Live</span>
+        </div>
+        <div class="flex flex-col items-center gap-1 text-[#d8e3f6]/40">
+            <span class="material-symbols-outlined" data-icon="query_stats">query_stats</span>
+            <span class="font-['IBM_Plex_Mono'] text-[8px] uppercase">Traffic</span>
+        </div>
+    </div>
+    <!-- Footer -->
+    <footer class="w-full py-4 border-t border-[#414753]/10 bg-[#040f1c] flex justify-between px-12 items-center mt-24">
+        <span class="font-['IBM_Plex_Mono'] text-[10px] tracking-tighter text-[#414753]">© 2024 SMARTROAD AI // MISSION
+            CRITICAL SYSTEMS</span>
+        <div class="flex gap-6">
+            <a class="font-['IBM_Plex_Mono'] text-[10px] tracking-tighter text-[#414753] hover:text-[#0066cc] transition-all opacity-70 hover:opacity-100"
+                href="#">Status: Nominal</a>
+            <a class="font-['IBM_Plex_Mono'] text-[10px] tracking-tighter text-[#414753] hover:text-[#0066cc] transition-all opacity-70 hover:opacity-100"
+                href="#">Terminal Access</a>
+            <a class="font-['IBM_Plex_Mono'] text-[10px] tracking-tighter text-[#414753] hover:text-[#0066cc] transition-all opacity-70 hover:opacity-100"
+                href="#">Protocol v4.2</a>
+        </div>
+    </footer>
+
+    <script>
+        let currentDetectionResult = null;
+
+        document.getElementById('image-upload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                document.getElementById('preview-image').src = URL.createObjectURL(file);
+                document.getElementById('preview-image').classList.remove('opacity-60');
+            }
+        });
+
+        document.getElementById('run-detection-btn').addEventListener('click', async function() {
+            const fileInput = document.getElementById('image-upload');
+            if (fileInput.files.length === 0) {
+                alert("Please upload an image first.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("image", fileInput.files[0]);
+
+            const btn = document.getElementById('run-detection-btn');
+            btn.innerText = "SCANNING...";
+            btn.disabled = true;
+
+            const startTime = Date.now();
+
+            try {
+                const response = await fetch('/detect', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) throw new Error(data.error);
+
+                currentDetectionResult = data;
+                
+                const timeTaken = Date.now() - startTime;
+                updateDetectionUI(data, timeTaken);
+
+                document.getElementById('generate-report-btn').style.display = 'block';
+
+            } catch(e) {
+                alert("Detection failed: " + e.message);
+            } finally {
+                btn.innerText = "RUN DETECTION";
+                btn.disabled = false;
+            }
+        });
+
+        function updateDetectionUI(data, timeMs) {
+            const resultBanner = document.getElementById('result-banner');
+            const resultIconBg = document.getElementById('result-icon-bg');
+            const resultIcon = document.getElementById('result-icon');
+            const resultTitle = document.getElementById('result-title');
+            const resultSubtitle = document.getElementById('result-subtitle');
+
+            resultBanner.classList.remove('hidden');
+
+            if (data.damage_found) {
+                resultBanner.className = "bg-error-container/20 border border-error/30 p-4 flex items-center gap-4";
+                resultIconBg.className = "w-10 h-10 bg-error/10 flex items-center justify-center rounded";
+                resultIcon.className = "material-symbols-outlined text-error";
+                resultIcon.innerText = "warning";
+                resultTitle.className = "font-headline font-bold text-error tracking-wider uppercase";
+                resultTitle.innerText = `POTHOLE DETECTED: ${data.total_detections} FOUND`;
+                resultSubtitle.className = "font-mono text-[10px] text-error/70 tracking-tight";
+            } else {
+                resultBanner.className = "bg-tertiary-container/20 border border-tertiary/30 p-4 flex items-center gap-4";
+                resultIconBg.className = "w-10 h-10 bg-tertiary/10 flex items-center justify-center rounded";
+                resultIcon.className = "material-symbols-outlined text-tertiary";
+                resultIcon.innerText = "check_circle";
+                resultTitle.className = "font-headline font-bold text-tertiary tracking-wider uppercase";
+                resultTitle.innerText = `NO POTHOLES DETECTED`;
+                resultSubtitle.className = "font-mono text-[10px] text-tertiary/70 tracking-tight";
+            }
+
+            resultSubtitle.innerText = `ANALYSIS COMPLETED IN ${timeMs}MS`;
+
+            const list = document.getElementById('detection-list');
+            list.innerHTML = "";
+
+            if (!data.damage_found) {
+                list.innerHTML = '<div class="text-on-surface-variant font-mono text-sm">Road surface appears nominal.</div>';
+                return;
+            }
+
+            data.detections.forEach((d, i) => {
+                let sevColor = "text-error", bgSev = "bg-error/15 border-error/20";
+                if (d.severity === 'Medium') { sevColor = "text-yellow-500"; bgSev = "bg-yellow-500/15 border-yellow-500/20"; }
+                if (d.severity === 'Low') { sevColor = "text-tertiary"; bgSev = "bg-tertiary/15 border-tertiary/20"; }
+
+                const itemHtml = `
+                    <div class="flex flex-col gap-2">
+                        <div class="flex justify-between items-end">
+                            <span class="font-headline font-bold text-on-surface uppercase tracking-wide">${d.class} (Detection ${i+1})</span>
+                            <span class="font-mono text-xs text-secondary">${d.confidence}% CONFIDENCE</span>
+                        </div>
+                        <div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-primary-container to-secondary" style="width: ${d.confidence}%">
+                            </div>
+                        </div>
+                        <div class="flex">
+                            <span class="px-2 py-0.5 ${bgSev} ${sevColor} font-mono text-[10px] rounded border uppercase tracking-tighter">Severity: ${d.severity}</span>
+                        </div>
+                    </div>
+                `;
+                list.innerHTML += itemHtml;
+            });
+        }
+
+        document.getElementById('generate-report-btn').addEventListener('click', async () => {
+            if (!currentDetectionResult) return;
+
+            const loc = document.getElementById('analyzer-location').value || "Unknown Location";
+            
+            try {
+                const response = await fetch('/report', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        detection_result: currentDetectionResult,
+                        location: loc
+                    })
+                });
+
+                const repData = await response.json();
+                if (repData.report_id) {
+                    alert('Report ' + repData.report_id + ' generated successfully!');
+                    window.location.href = 'reports_tracker.html';
+                }
+            } catch(e) {
+                alert("Failed to generate report: " + e.message);
+            }
+        });
+    </script>
+</body>
+
+</html>

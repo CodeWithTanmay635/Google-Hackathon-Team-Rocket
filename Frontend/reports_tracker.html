@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Reports - SmartRoad AI</title>
+    <link rel="icon" href="data:," />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@300;400;500;600&amp;family=IBM+Plex+Sans:wght@300;400;500;600&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#00783a",
+                        "inverse-on-surface": "#26313f",
+                        "secondary": "#a2e7ff",
+                        "on-surface-variant": "#c1c6d5",
+                        "on-background": "#d8e3f6",
+                        "tertiary-fixed": "#62ff96",
+                        "surface": "#091421",
+                        "error": "#ffb4ab",
+                        "on-secondary-fixed": "#001f27",
+                        "surface-tint": "#aac7ff",
+                        "on-tertiary-fixed-variant": "#005226",
+                        "primary-fixed-dim": "#aac7ff",
+                        "on-secondary-container": "#005669",
+                        "surface-bright": "#2f3a49",
+                        "outline": "#8b919e",
+                        "on-primary-fixed-variant": "#00458e",
+                        "surface-variant": "#2b3544",
+                        "surface-container-high": "#202b39",
+                        "primary": "#aac7ff",
+                        "error-container": "#93000a",
+                        "primary-fixed": "#d7e3ff",
+                        "surface-container-low": "#111c2a",
+                        "surface-dim": "#091421",
+                        "secondary-fixed": "#b4ebff",
+                        "surface-container": "#16202e",
+                        "inverse-primary": "#005cba",
+                        "on-primary": "#002f65",
+                        "surface-container-highest": "#2b3544",
+                        "tertiary": "#00e475",
+                        "secondary-fixed-dim": "#3cd7ff",
+                        "on-secondary-fixed-variant": "#004e5f",
+                        "outline-variant": "#414753",
+                        "on-surface": "#d8e3f6",
+                        "on-tertiary": "#003918",
+                        "inverse-surface": "#d8e3f6",
+                        "on-error": "#690005",
+                        "secondary-container": "#00d2fd",
+                        "surface-container-lowest": "#040f1c",
+                        "tertiary-fixed-dim": "#00e475",
+                        "on-tertiary-fixed": "#00210b",
+                        "on-tertiary-container": "#8fffab",
+                        "on-secondary": "#003642",
+                        "on-error-container": "#ffdad6",
+                        "on-primary-container": "#dfe8ff",
+                        "on-primary-fixed": "#001b3e",
+                        "primary-container": "#0066cc",
+                        "background": "#091421"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Rajdhani"],
+                        "body": ["IBM Plex Sans"],
+                        "label": ["IBM Plex Mono"]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            background-color: #020b18;
+            background-image: radial-gradient(#0066cc10 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .glass-effect {
+            backdrop-filter: blur(12px);
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body
+    class="text-on-background min-h-screen font-body selection:bg-primary-container selection:text-on-primary-container">
+    <!-- TopAppBar -->
+    <header
+        class="fixed top-0 w-full z-50 bg-[#091421]/70 backdrop-blur-xl border-b border-[#0066cc]/30 flex justify-between items-center px-8 h-16 w-full">
+        <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-[#aac7ff]" data-icon="add_road">add_road</span>
+            <span class="text-2xl font-bold text-[#d8e3f6] font-['Rajdhani'] uppercase tracking-wider">SmartRoad
+                AI</span>
+        </div>
+        <nav class="hidden md:flex gap-8 items-center h-full">
+            <a class="text-[#d8e3f6]/60 hover:text-[#aac7ff] transition-colors font-['IBM_Plex_Mono'] text-xs uppercase tracking-widest"
+                href="stich.html">Home</a>
+            <a class="text-[#d8e3f6]/60 hover:text-[#aac7ff] transition-colors font-['IBM_Plex_Mono'] text-xs uppercase tracking-widest"
+                href="Analyer.html">Detect</a>
+            <a class="text-[#d8e3f6]/60 hover:text-[#aac7ff] transition-colors font-['IBM_Plex_Mono'] text-xs uppercase tracking-widest"
+                href="live.html">Live</a>
+            <a class="text-[#d8e3f6]/60 hover:text-[#aac7ff] transition-colors font-['IBM_Plex_Mono'] text-xs uppercase tracking-widest"
+                href="Traffic_predictor.html">Traffic</a>
+            <a class="text-[#0066cc] border-b-2 border-[#0066cc] pb-1 font-bold font-['IBM_Plex_Mono'] text-xs uppercase tracking-widest"
+                href="reports_tracker.html">Reports</a>
+        </nav>
+        <div class="flex items-center">
+            <span
+                class="font-['IBM_Plex_Mono'] text-[10px] text-[#0066cc] border border-[#0066cc]/30 px-2 py-1 rounded">SYSTEM
+                ONLINE</span>
+        </div>
+    </header>
+    <main class="pt-28 pb-20 px-6 max-w-5xl mx-auto flex flex-col gap-12">
+        <!-- Main Info Card -->
+        <section
+            class="bg-surface-container-low rounded-xl p-10 border border-outline-variant/10 shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-primary-container/5 rounded-full blur-3xl -mr-32 -mt-32">
+            </div>
+            <div class="flex flex-col items-center text-center gap-6 relative z-10">
+                <div
+                    class="w-16 h-16 bg-surface-container-highest rounded-full flex items-center justify-center text-3xl">
+                    📋
+                </div>
+                <div class="space-y-2">
+                    <h1 class="text-4xl font-headline font-bold text-on-surface uppercase tracking-tight">Reports
+                        Auto-Saved Locally</h1>
+                    <p class="text-on-surface-variant max-w-xl mx-auto text-lg leading-relaxed">
+                        Mission-critical diagnostic data is indexed and archived in real-time. Local storage ensures
+                        zero-latency access and redundant safety protocols for infrastructural integrity assessments.
+                    </p>
+                </div>
+                <div
+                    class="inline-flex items-center gap-3 bg-surface-container-lowest border border-secondary/20 px-4 py-2 rounded-lg">
+                    <span class="material-symbols-outlined text-secondary text-sm"
+                        data-icon="folder_open">folder_open</span>
+                    <code
+                        class="font-label text-secondary text-sm tracking-tight">E:\SmartRoad AI\Backend\reports\</code>
+                </div>
+                <!-- Sample report preview terminal -->
+                <div
+                    class="w-full mt-8 bg-black/40 border border-outline-variant/20 rounded-lg p-6 text-left overflow-hidden shadow-inner font-label">
+                    <div class="flex gap-1.5 mb-4">
+                        <div class="w-2.5 h-2.5 rounded-full bg-error/40"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-tertiary/40"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-secondary/40"></div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                        <div class="space-y-1">
+                            <p class="text-secondary/50 uppercase">// RUNTIME_LOG_042</p>
+                            <p class="text-on-surface"><span class="text-secondary">REPORT_ID:</span> SR-AX-9921-X</p>
+                            <p class="text-on-surface"><span class="text-secondary">TIMESTAMP:</span>
+                                2024.05.12_23:14:02</p>
+                            <p class="text-on-surface"><span class="text-secondary">NODE_LOC:</span> 28.6139° N,
+                                77.2090° E</p>
+                        </div>
+                        <div class="space-y-1 md:text-right">
+                            <p class="text-tertiary">STATUS: OPTIMIZED</p>
+                            <p class="text-error">ALERTS: [CRITICAL_SURFACE_DAMAGE]</p>
+                            <p class="text-on-surface-variant">STORAGE: CACHED_LOCAL</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-outline-variant/10 text-xs">
+                        <p class="text-secondary/80 font-bold mb-2">&gt;&gt; ANALYSIS SUMMARY</p>
+                        <p class="text-on-background/80 leading-relaxed">
+                            Structural scan complete. 3 severe surface fissures detected on Segment 4. Thermal expansion
+                            within nominal limits. Immediate maintenance ticket generated for municipal dispatch.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Reports Row -->
+        <div id="reports-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="text-secondary font-mono col-span-3 text-center">Loading reports...</div>
+        </div>
+    </main>
+    <!-- Footer -->
+    <footer class="w-full py-4 border-t border-[#414753]/10 bg-[#040f1c] flex justify-between px-12 items-center">
+        <p class="font-['IBM_Plex_Mono'] text-[10px] tracking-tighter text-[#414753]">© 2024 SMARTROAD AI // MISSION
+            CRITICAL SYSTEMS</p>
+        <div class="flex gap-6">
+            <span
+                class="font-['IBM_Plex_Mono'] text-[10px] tracking-tighter text-[#0066cc] opacity-70 hover:opacity-100 transition-opacity cursor-pointer">Status:
+                Nominal</span>
+            <span
+                class="font-['IBM_Plex_Mono'] text-[10px] tracking-tighter text-[#414753] opacity-70 hover:opacity-100 transition-opacity cursor-pointer">Terminal
+                Access</span>
+            <span
+                class="font-['IBM_Plex_Mono'] text-[10px] tracking-tighter text-[#414753] opacity-70 hover:opacity-100 transition-opacity cursor-pointer">Protocol
+                v4.2</span>
+        </div>
+    </footer>
+
+    <script>
+        async function loadReports() {
+            const grid = document.getElementById('reports-grid');
+            
+            try {
+                const res = await fetch('/api/reports');
+                const files = await res.json();
+                
+                if (files.length === 0) {
+                    grid.innerHTML = '<div class="text-on-surface-variant col-span-3 text-center">No reports found via API. Run detection to generate reports.</div>';
+                    return;
+                }
+                
+                grid.innerHTML = '';
+                
+                for (const file of files) {
+                    try {
+                        const contentRes = await fetch('/api/reports/' + file.filename);
+                        const text = await contentRes.text();
+                        
+                        const detectionMatch = text.match(/Total Detections\s*:\s*(\d+)/i);
+                        const potholes = detectionMatch ? detectionMatch[1] : '0';
+                        
+                        const severityMatch = text.match(/Overall Severity\s*:\s*([A-Za-z]+)/i);
+                        const severity = severityMatch ? severityMatch[1] : (potholes > 0 ? 'High' : 'None');
+                        
+                        const dateMatch = text.match(/Generated At\s*:\s*(.+)/i);
+                        const date = dateMatch ? dateMatch[1] : new Date(file.timestamp * 1000).toLocaleString();
+
+                        const locationMatch = text.match(/Location\s*:\s*(.+)/i);
+                        const location = locationMatch ? locationMatch[1] : "Unknown Area";
+                        
+                        const isSevere = potholes > 0;
+
+                        const card = document.createElement('div');
+                        card.className = "bg-surface-container rounded-lg p-6 border border-outline-variant/5 flex flex-col gap-4 hover:bg-surface-container-high transition-all group";
+                        
+                        card.innerHTML = `
+                            <div class="flex justify-between items-start">
+                                <span class="font-label text-primary text-xs font-bold tracking-widest">${file.id}</span>
+                                <span class="${isSevere ? 'bg-error/15 text-error' : 'bg-tertiary/15 text-tertiary'} text-[10px] font-label px-2 py-0.5 rounded tracking-tighter uppercase font-bold">
+                                    ${isSevere ? 'Pending Action' : 'Clear'}
+                                </span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl">${isSevere ? '⚠️' : '✅'}</span>
+                                <h3 class="font-headline font-bold text-xl text-on-surface">${potholes} Potholes</h3>
+                            </div>
+                            <div class="space-y-1">
+                                <p class="text-on-surface-variant text-xs font-label uppercase truncate" title="${location}">// ${location}</p>
+                                <p class="text-on-surface-variant/60 text-[10px] font-label">${date}</p>
+                            </div>
+                            <div class="mt-auto pt-4 flex justify-between items-center border-t border-outline-variant/5">
+                                <span class="text-[10px] font-label text-${isSevere ? 'error' : 'tertiary'} uppercase tracking-widest">Severity: ${severity}</span>
+                                <a href="/api/reports/${file.filename}" target="_blank" class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors text-lg" data-icon="open_in_new">open_in_new</a>
+                            </div>
+                        `;
+                        grid.appendChild(card);
+                    } catch(e) {
+                        console.error("Error parsing report: " + file.filename, e);
+                    }
+                }
+            } catch (err) {
+                grid.innerHTML = '<div class="text-error font-mono col-span-3 text-center">Error loading reports from backend (' + err.message + ')</div>';
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', loadReports);
+    </script>
+</body>
+
+</html>

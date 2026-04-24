@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detect — SmartRoad AI</title>
+<link rel="icon" href="data:," />
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #020b18;
+    --blue-mid: #0a2540;
+    --blue-accent: #0066cc;
+    --blue-bright: #1a8fff;
+    --cyan: #00d4ff;
+    --white: #f0f6ff;
+    --white-dim: #8aa8c8;
+    --red-alert: #ff3b3b;
+    --green-ok: #00e676;
+    --yellow-warn: #ffcc00;
+    --border: rgba(0, 153, 255, 0.2);
+    --card-bg: rgba(4, 20, 40, 0.85);
+    --grid-color: rgba(0, 102, 204, 0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'IBM Plex Sans', sans-serif;
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--grid-color) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 48px;
+    height: 64px;
+    background: rgba(2, 11, 24, 0.95);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+  }
+
+  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-logo-icon { width: 32px; height: 32px; background: var(--blue-accent); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .nav-logo-text { font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; color: var(--white); letter-spacing: 1px; }
+  .nav-logo-text span { color: var(--cyan); }
+  .nav-links { display: flex; gap: 4px; }
+  .nav-links a { color: var(--white-dim); text-decoration: none; font-size: 13px; font-weight: 500; padding: 6px 14px; border-radius: 4px; transition: all 0.2s; letter-spacing: 0.5px; text-transform: uppercase; }
+  .nav-links a:hover, .nav-links a.active { color: var(--white); background: rgba(0, 102, 204, 0.2); }
+  .nav-status { display: flex; align-items: center; gap: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--green-ok); }
+  .nav-status::before { content: ''; width: 8px; height: 8px; background: var(--green-ok); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    padding: 100px 48px 80px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .page-header { margin-bottom: 48px; }
+  .page-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--blue-bright); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 12px; }
+  .page-title { font-family: 'Rajdhani', sans-serif; font-size: 48px; font-weight: 700; line-height: 1; margin-bottom: 12px; }
+  .page-title span { color: var(--cyan); }
+  .page-subtitle { font-size: 15px; color: var(--white-dim); line-height: 1.6; }
+
+  .detect-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 32px;
+  }
+
+  .card-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Upload zone */
+  .upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    padding: 48px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: rgba(0, 102, 204, 0.03);
+    margin-bottom: 20px;
+  }
+
+  .upload-zone:hover, .upload-zone.dragover {
+    border-color: var(--blue-bright);
+    background: rgba(0, 102, 204, 0.08);
+  }
+
+  .upload-icon { font-size: 48px; margin-bottom: 16px; display: block; }
+  .upload-text { font-size: 15px; color: var(--white); margin-bottom: 8px; font-weight: 500; }
+  .upload-hint { font-size: 12px; color: var(--white-dim); font-family: 'IBM Plex Mono', monospace; }
+
+  #fileInput { display: none; }
+
+  .preview-img {
+    width: 100%;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    margin-bottom: 20px;
+    display: none;
+    max-height: 280px;
+    object-fit: cover;
+  }
+
+  .btn-detect {
+    width: 100%;
+    padding: 14px;
+    background: var(--blue-accent);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'Rajdhani', sans-serif;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-detect:hover:not(:disabled) {
+    background: var(--blue-bright);
+    box-shadow: 0 4px 20px rgba(0, 102, 204, 0.4);
+  }
+
+  .btn-detect:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Results */
+  .result-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    color: var(--white-dim);
+    text-align: center;
+    gap: 12px;
+  }
+
+  .result-placeholder-icon { font-size: 48px; opacity: 0.4; }
+  .result-placeholder-text { font-size: 14px; font-family: 'IBM Plex Mono', monospace; }
+
+  .result-content { display: none; }
+
+  .damage-banner {
+    padding: 16px 20px;
+    border-radius: 6px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .damage-banner.danger {
+    background: rgba(255, 59, 59, 0.1);
+    border: 1px solid rgba(255, 59, 59, 0.4);
+    color: var(--red-alert);
+  }
+
+  .damage-banner.safe {
+    background: rgba(0, 230, 118, 0.1);
+    border: 1px solid rgba(0, 230, 118, 0.4);
+    color: var(--green-ok);
+  }
+
+  .detection-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+
+  .detection-item {
+    background: rgba(0, 102, 204, 0.08);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .detection-class {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  .detection-right { display: flex; align-items: center; gap: 12px; }
+
+  .confidence-bar-wrap {
+    width: 100px;
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .confidence-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue-accent), var(--cyan));
+    border-radius: 2px;
+    transition: width 0.5s ease;
+  }
+
+  .confidence-val {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--cyan);
+    min-width: 44px;
+    text-align: right;
+  }
+
+  .severity-badge {
+    font-size: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    padding: 3px 8px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .severity-badge.Critical { background: rgba(255,59,59,0.2); color: var(--red-alert); border: 1px solid rgba(255,59,59,0.3); }
+  .severity-badge.High { background: rgba(255,150,0,0.2); color: #ff9600; border: 1px solid rgba(255,150,0,0.3); }
+  .severity-badge.Medium { background: rgba(255,204,0,0.15); color: var(--yellow-warn); border: 1px solid rgba(255,204,0,0.3); }
+  .severity-badge.Low { background: rgba(0,230,118,0.1); color: var(--green-ok); border: 1px solid rgba(0,230,118,0.2); }
+
+  .btn-report {
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    color: var(--cyan);
+    border: 1px solid var(--cyan);
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'IBM Plex Mono', monospace;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+
+  .btn-report:hover {
+    background: rgba(0, 212, 255, 0.1);
+  }
+
+  .loading {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    gap: 20px;
+  }
+
+  .spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid var(--border);
+    border-top-color: var(--blue-bright);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-text {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--white-dim);
+  }
+
+  .location-input {
+    width: 100%;
+    background: rgba(0, 102, 204, 0.08);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 16px;
+    color: var(--white);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    margin-bottom: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .location-input:focus { border-color: var(--blue-bright); }
+  .location-input::placeholder { color: var(--white-dim); }
+
+  .input-label {
+    font-size: 12px;
+    color: var(--white-dim);
+    font-family: 'IBM Plex Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    display: block;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">🛣️</div>
+    <span class="nav-logo-text">Smart<span>Road</span> AI</span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="detect.html" class="active">Detect</a>
+    <a href="monitor.html">Live</a>
+    <a href="traffic.html">Traffic</a>
+    <a href="reports.html">Reports</a>
+  </div>
+  <div class="nav-status">SYSTEM ONLINE</div>
+</nav>
+
+<div class="page">
+  <div class="page-header">
+    <div class="page-label">// Module 02</div>
+    <h1 class="page-title">Upload & <span>Detect</span></h1>
+    <p class="page-subtitle">Upload a road image for instant AI-powered pothole and damage detection with auto-report generation.</p>
+  </div>
+
+  <div class="detect-grid">
+    <!-- Left: Upload -->
+    <div class="card">
+      <div class="card-title">📸 Upload Road Image</div>
+
+      <label class="input-label">Location (optional)</label>
+      <input type="text" class="location-input" id="locationInput" placeholder="e.g. Market Chowk, Solapur" />
+
+      <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+        <span class="upload-icon">📁</span>
+        <div class="upload-text">Click to upload or drag & drop</div>
+        <div class="upload-hint">JPG, PNG supported</div>
+      </div>
+      <input type="file" id="fileInput" accept=".jpg,.jpeg,.png">
+
+      <img class="preview-img" id="previewImg" alt="Preview">
+
+      <button class="btn-detect" id="detectBtn" disabled onclick="runDetection()">
+        🔍 RUN DETECTION
+      </button>
+    </div>
+
+    <!-- Right: Results -->
+    <div class="card">
+      <div class="card-title">📊 Detection Results</div>
+
+      <div class="result-placeholder" id="placeholder">
+        <span class="result-placeholder-icon">🛣️</span>
+        <span class="result-placeholder-text">Upload an image to see results</span>
+      </div>
+
+      <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <div class="loading-text">Analyzing road damage...</div>
+      </div>
+
+      <div class="result-content" id="resultContent">
+        <div class="damage-banner" id="damageBanner"></div>
+        <div class="detection-list" id="detectionList"></div>
+        <button class="btn-report" id="reportBtn" onclick="generateReport()">📋 GENERATE CIVIC REPORT</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const BACKEND = 'http://127.0.0.1:5000';
+  let selectedFile = null;
+  let lastResult = null;
+
+  // File input
+  document.getElementById('fileInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    selectedFile = file;
+
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const img = document.getElementById('previewImg');
+      img.src = ev.target.result;
+      img.style.display = 'block';
+      document.getElementById('uploadZone').style.display = 'none';
+      document.getElementById('detectBtn').disabled = false;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // Drag and drop
+  const zone = document.getElementById('uploadZone');
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (file) document.getElementById('fileInput').files = e.dataTransfer.files;
+    document.getElementById('fileInput').dispatchEvent(new Event('change'));
+  });
+
+  async function runDetection() {
+    if (!selectedFile) return;
+
+    document.getElementById('placeholder').style.display = 'none';
+    document.getElementById('resultContent').style.display = 'none';
+    document.getElementById('loading').style.display = 'flex';
+    document.getElementById('detectBtn').disabled = true;
+
+    const formData = new FormData();
+    formData.append('image', selectedFile);
+
+    try {
+      const response = await fetch(`${BACKEND}/detect`, { method: 'POST', body: formData });
+      const result = await response.json();
+      lastResult = result;
+      showResults(result);
+    } catch (err) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('placeholder').style.display = 'flex';
+      document.getElementById('placeholder').innerHTML = '<span class="result-placeholder-icon">❌</span><span class="result-placeholder-text">Backend not running. Start app.py first!</span>';
+    }
+
+    document.getElementById('detectBtn').disabled = false;
+  }
+
+  function showResults(result) {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('resultContent').style.display = 'block';
+
+    const banner = document.getElementById('damageBanner');
+    if (result.damage_found) {
+      banner.className = 'damage-banner danger';
+      banner.innerHTML = `⚠️ ${result.total_detections} POTHOLE(S) DETECTED`;
+    } else {
+      banner.className = 'damage-banner safe';
+      banner.innerHTML = `✅ ROAD CLEAR — NO DAMAGE FOUND`;
+    }
+
+    const list = document.getElementById('detectionList');
+    list.innerHTML = '';
+
+    if (result.detections && result.detections.length > 0) {
+      result.detections.forEach((d, i) => {
+        list.innerHTML += `
+          <div class="detection-item">
+            <div>
+              <div class="detection-class">${d.class.toUpperCase()} #${i+1}</div>
+            </div>
+            <div class="detection-right">
+              <div class="confidence-bar-wrap">
+                <div class="confidence-bar" style="width:${d.confidence}%"></div>
+              </div>
+              <div class="confidence-val">${d.confidence}%</div>
+              <div class="severity-badge ${d.severity}">${d.severity}</div>
+            </div>
+          </div>`;
+      });
+    } else {
+      list.innerHTML = '<div style="color:var(--white-dim);font-size:13px;text-align:center;padding:20px;font-family:IBM Plex Mono">No damage detections above threshold</div>';
+    }
+  }
+
+  async function generateReport() {
+    if (!lastResult) return;
+    const location = document.getElementById('locationInput').value || 'Location not specified';
+    try {
+      const response = await fetch(`${BACKEND}/report`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ detection_result: lastResult, location: location })
+      });
+      const report = await response.json();
+      alert(`✅ Report Generated!\nReport ID: ${report.report_id}\nSaved to: ${report.report_file}`);
+    } catch(err) {
+      alert('Report saved locally! Check the reports folder.');
+    }
+  }
+</script>
+</body>
+</html>

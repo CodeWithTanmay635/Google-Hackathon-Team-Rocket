@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartRoad AI — Intelligent Urban Road Intelligence</title>
+    <link rel="icon" href="data:," />
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #020b18;
+    --blue-deep: #041428;
+    --blue-mid: #0a2540;
+    --blue-accent: #0066cc;
+    --blue-bright: #1a8fff;
+    --blue-glow: #00aaff;
+    --cyan: #00d4ff;
+    --white: #f0f6ff;
+    --white-dim: #8aa8c8;
+    --red-alert: #ff3b3b;
+    --green-ok: #00e676;
+    --yellow-warn: #ffcc00;
+    --grid-color: rgba(0, 102, 204, 0.08);
+    --border: rgba(0, 153, 255, 0.2);
+    --card-bg: rgba(4, 20, 40, 0.85);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'IBM Plex Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--grid-color) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Glow orbs */
+  body::after {
+    content: '';
+    position: fixed;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 500px;
+    background: radial-gradient(ellipse, rgba(0, 102, 204, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 48px;
+    height: 64px;
+    background: rgba(2, 11, 24, 0.9);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .nav-logo-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--blue-accent);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+
+  .nav-logo-text {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: 1px;
+  }
+
+  .nav-logo-text span { color: var(--cyan); }
+
+  .nav-links {
+    display: flex;
+    gap: 4px;
+  }
+
+  .nav-links a {
+    color: var(--white-dim);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 4px;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .nav-links a:hover {
+    color: var(--white);
+    background: rgba(0, 102, 204, 0.2);
+  }
+
+  .nav-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--green-ok);
+  }
+
+  .nav-status::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: var(--green-ok);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0, 230, 118, 0.4); }
+    50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(0, 230, 118, 0); }
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 120px 48px 80px;
+    text-align: center;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0, 102, 204, 0.15);
+    border: 1px solid rgba(0, 102, 204, 0.4);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--cyan);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    animation: fadeInDown 0.6s ease both;
+  }
+
+  .hero-badge::before {
+    content: '●';
+    color: var(--green-ok);
+    animation: pulse 2s infinite;
+  }
+
+  .hero-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(48px, 8vw, 96px);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -1px;
+    margin-bottom: 24px;
+    animation: fadeInDown 0.6s 0.1s ease both;
+  }
+
+  .hero-title .line1 { display: block; color: var(--white); }
+  .hero-title .line2 {
+    display: block;
+    background: linear-gradient(90deg, var(--blue-bright), var(--cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-subtitle {
+    font-size: 17px;
+    color: var(--white-dim);
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 48px;
+    font-weight: 300;
+    animation: fadeInDown 0.6s 0.2s ease both;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    animation: fadeInDown 0.6s 0.3s ease both;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--blue-accent);
+    color: white;
+    text-decoration: none;
+    padding: 14px 28px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-primary:hover {
+    background: var(--blue-bright);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0, 102, 204, 0.4);
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: var(--white);
+    text-decoration: none;
+    padding: 14px 28px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--blue-bright);
+    color: var(--cyan);
+    background: rgba(0, 102, 204, 0.1);
+  }
+
+  /* STATS BAR */
+  .stats-bar {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: rgba(4, 20, 40, 0.6);
+    backdrop-filter: blur(8px);
+    animation: fadeIn 0.8s 0.5s ease both;
+  }
+
+  .stat-item {
+    flex: 1;
+    max-width: 200px;
+    padding: 28px 24px;
+    text-align: center;
+    border-right: 1px solid var(--border);
+  }
+
+  .stat-item:last-child { border-right: none; }
+
+  .stat-value {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--cyan);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--white-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* FEATURES */
+  .features {
+    position: relative;
+    z-index: 1;
+    padding: 100px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--blue-bright);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 60px;
+    line-height: 1.1;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: var(--border);
+  }
+
+  .feature-card {
+    background: var(--card-bg);
+    padding: 48px 40px;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+    display: block;
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 0;
+    background: var(--blue-bright);
+    transition: height 0.3s;
+  }
+
+  .feature-card:hover::before { height: 100%; }
+
+  .feature-card:hover {
+    background: rgba(0, 102, 204, 0.08);
+  }
+
+  .feature-number {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--blue-bright);
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+  }
+
+  .feature-icon {
+    font-size: 36px;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .feature-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
+  }
+
+  .feature-desc {
+    font-size: 14px;
+    color: var(--white-dim);
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+
+  .feature-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--blue-bright);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .feature-link::after {
+    content: '→';
+    transition: transform 0.2s;
+  }
+
+  .feature-card:hover .feature-link::after {
+    transform: translateX(4px);
+  }
+
+  /* HOW IT WORKS */
+  .how-it-works {
+    position: relative;
+    z-index: 1;
+    padding: 80px 48px;
+    background: rgba(4, 20, 40, 0.5);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .how-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-top: 60px;
+    position: relative;
+  }
+
+  .steps::before {
+    content: '';
+    position: absolute;
+    top: 28px;
+    left: 12.5%;
+    right: 12.5%;
+    height: 1px;
+    background: linear-gradient(90deg, var(--blue-accent), var(--cyan));
+  }
+
+  .step {
+    text-align: center;
+    padding: 0 24px;
+    position: relative;
+  }
+
+  .step-num {
+    width: 56px;
+    height: 56px;
+    background: var(--blue-mid);
+    border: 2px solid var(--blue-accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--cyan);
+    margin: 0 auto 20px;
+    position: relative;
+    z-index: 1;
+    background: var(--navy);
+  }
+
+  .step-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .step-desc {
+    font-size: 13px;
+    color: var(--white-dim);
+    line-height: 1.6;
+  }
+
+  /* FOOTER */
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 48px;
+    border-top: 1px solid var(--border);
+  }
+
+  .footer-logo {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .footer-logo span { color: var(--cyan); }
+
+  .footer-text {
+    font-size: 13px;
+    color: var(--white-dim);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .footer-text a { color: var(--blue-bright); text-decoration: none; }
+
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">🛣️</div>
+    <span class="nav-logo-text">Smart<span>Road</span> AI</span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="detect.html">Detect</a>
+    <a href="monitor.html">Live</a>
+    <a href="traffic.html">Traffic</a>
+    <a href="reports.html">Reports</a>
+    <a href="presentation.html" style="color:var(--green-ok); border: 1px solid var(--green-ok);">EV Priority</a>
+  </div>
+  <div class="nav-status">SYSTEM ONLINE</div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">AI-Powered Civic Infrastructure Monitoring</div>
+  <h1 class="hero-title">
+    <span class="line1">INTELLIGENT</span>
+    <span class="line2">ROAD INTELLIGENCE</span>
+  </h1>
+  <p class="hero-subtitle">
+    Real-time pothole detection, traffic prediction, and automated civic reporting — powered by computer vision for smarter Indian cities.
+  </p>
+  <div class="hero-cta">
+    <a href="monitor.html" class="btn-primary">🎥 Start Live Monitor</a>
+    <a href="detect.html" class="btn-secondary">📸 Upload & Detect</a>
+  </div>
+</section>
+
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-value">96%</div>
+    <div class="stat-label">Detection Accuracy</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value">YOLOv11</div>
+    <div class="stat-label">AI Model</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value">&lt;1s</div>
+    <div class="stat-label">Response Time</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value">24/7</div>
+    <div class="stat-label">Monitoring</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value">AUTO</div>
+    <div class="stat-label">Report Generation</div>
+  </div>
+</div>
+
+<section class="features">
+  <div class="section-label">// Core Modules</div>
+  <h2 class="section-title">Four Pillars of<br>SmartRoad Intelligence</h2>
+
+  <div class="features-grid">
+    <a href="monitor.html" class="feature-card">
+      <div class="feature-number">01 // LIVE MONITOR</div>
+      <span class="feature-icon">🎥</span>
+      <div class="feature-title">Live Camera Detection</div>
+      <p class="feature-desc">Real-time CCTV feed analysis using YOLOv11. Detects potholes and road damage continuously, triggering instant alerts and auto-saving reports.</p>
+      <div class="feature-link">Launch Monitor</div>
+    </a>
+
+    <a href="detect.html" class="feature-card">
+      <div class="feature-number">02 // IMAGE DETECT</div>
+      <span class="feature-icon">📸</span>
+      <div class="feature-title">Upload & Detect</div>
+      <p class="feature-desc">Upload any road image for instant AI analysis. Get detailed severity scores, confidence levels, and a downloadable civic complaint report.</p>
+      <div class="feature-link">Start Detection</div>
+    </a>
+
+    <a href="traffic.html" class="feature-card">
+      <div class="feature-number">03 // TRAFFIC AI</div>
+      <span class="feature-icon">🚦</span>
+      <div class="feature-title">Traffic Predictor</div>
+      <p class="feature-desc">Predict congestion levels by area and time. Get intelligent route suggestions optimized for Solapur's road network and peak hours.</p>
+      <div class="feature-link">Predict Traffic</div>
+    </a>
+
+    <a href="reports.html" class="feature-card">
+      <div class="feature-number">04 // REPORTS</div>
+      <span class="feature-icon">📋</span>
+      <div class="feature-title">Civic Reports</div>
+      <p class="feature-desc">Auto-generated complaint reports with Report IDs, timestamps, severity levels, and location data — ready to submit to Municipal Corporation.</p>
+      <div class="feature-link">View Reports</div>
+    </a>
+
+    <a href="presentation.html" class="feature-card">
+      <div class="feature-number">05 // EV PRIORITY UI</div>
+      <span class="feature-icon">🚑</span>
+      <div class="feature-title">Emergency Mode</div>
+      <p class="feature-desc">Interactive demonstration of how ambulances get traffic signal priority sequentially mapping lanes using computer vision.</p>
+      <div class="feature-link">View Presentation</div>
+    </a>
+
+    <a href="backend_presentation.html" class="feature-card">
+      <div class="feature-number">06 // ARCHITECTURE</div>
+      <span class="feature-icon">🧠</span>
+      <div class="feature-title">Backend Telemetry</div>
+      <p class="feature-desc">Live mission-control dashboard visualizing continuous data streams, AI inference confidence scores, and mathematical lane computation.</p>
+      <div class="feature-link">View Architecture</div>
+    </a>
+  </div>
+</section>
+
+<section class="how-it-works">
+  <div class="how-inner">
+    <div class="section-label">// System Flow</div>
+    <h2 class="section-title">How SmartRoad AI Works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-title">Camera Input</div>
+        <p class="step-desc">Live CCTV feed or uploaded image is captured and processed</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-title">AI Detection</div>
+        <p class="step-desc">YOLOv11 model analyzes frames for potholes with 96% accuracy</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-title">Alert & Report</div>
+        <p class="step-desc">Severity classified, report auto-generated with location data</p>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-title">Civic Action</div>
+        <p class="step-desc">Report forwarded to Municipal Corporation for road repair</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">Smart<span>Road</span> AI</div>
+  <p class="footer-text">Built for <a href="#">Google Build With AI Challenge 2026</a> · GDG WIT Solapur · Team SmartRoad</p>
+</footer>
+
+</body>
+</html>

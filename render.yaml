@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: smartroad-ai
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python Backend/app.py"
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: PYTHON_VERSION
+        value: 3.10.0

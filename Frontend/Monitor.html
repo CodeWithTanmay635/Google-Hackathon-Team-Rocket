@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Monitor — SmartRoad AI</title>
+    <link rel="icon" href="data:," />
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#020b18; --blue-accent:#0066cc; --blue-bright:#1a8fff;
+    --cyan:#00d4ff; --white:#f0f6ff; --white-dim:#8aa8c8;
+    --red-alert:#ff3b3b; --green-ok:#00e676; --yellow-warn:#ffcc00;
+    --border:rgba(0,153,255,0.2); --card-bg:rgba(4,20,40,0.85);
+    --grid-color:rgba(0,102,204,0.08);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--navy); color:var(--white); font-family:'IBM Plex Sans',sans-serif; min-height:100vh; }
+  body::before { content:''; position:fixed; inset:0; background-image:linear-gradient(var(--grid-color) 1px,transparent 1px),linear-gradient(90deg,var(--grid-color) 1px,transparent 1px); background-size:40px 40px; pointer-events:none; z-index:0; }
+  nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:0 48px; height:64px; background:rgba(2,11,24,0.95); border-bottom:1px solid var(--border); backdrop-filter:blur(12px); }
+  .nav-logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .nav-logo-icon { width:32px; height:32px; background:var(--blue-accent); border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:16px; }
+  .nav-logo-text { font-family:'Rajdhani',sans-serif; font-size:20px; font-weight:700; color:var(--white); letter-spacing:1px; }
+  .nav-logo-text span { color:var(--cyan); }
+  .nav-links { display:flex; gap:4px; }
+  .nav-links a { color:var(--white-dim); text-decoration:none; font-size:13px; font-weight:500; padding:6px 14px; border-radius:4px; transition:all 0.2s; letter-spacing:0.5px; text-transform:uppercase; }
+  .nav-links a:hover,.nav-links a.active { color:var(--white); background:rgba(0,102,204,0.2); }
+  .nav-status { display:flex; align-items:center; gap:8px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--green-ok); }
+  .nav-status::before { content:''; width:8px; height:8px; background:var(--green-ok); border-radius:50%; animation:blink 2s infinite; }
+  @keyframes blink { 0%,100%{opacity:1}50%{opacity:0.4} }
+
+  .page { position:relative; z-index:1; padding:100px 48px 80px; max-width:1200px; margin:0 auto; }
+  .page-header { margin-bottom:40px; }
+  .page-label { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--blue-bright); text-transform:uppercase; letter-spacing:3px; margin-bottom:12px; }
+  .page-title { font-family:'Rajdhani',sans-serif; font-size:48px; font-weight:700; line-height:1; margin-bottom:12px; }
+  .page-title span { color:var(--cyan); }
+  .page-subtitle { font-size:15px; color:var(--white-dim); line-height:1.6; }
+
+  .monitor-grid { display:grid; grid-template-columns:1fr 380px; gap:24px; align-items:start; }
+
+  /* Camera panel */
+  .camera-panel { background:var(--card-bg); border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+
+  .camera-header { padding:16px 24px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+  .camera-header-left { display:flex; align-items:center; gap:10px; font-family:'Rajdhani',sans-serif; font-size:18px; font-weight:700; }
+  .rec-dot { width:10px; height:10px; background:var(--red-alert); border-radius:50%; animation:blink 1s infinite; }
+
+  .camera-wrap { position:relative; background:#000; aspect-ratio:16/9; overflow:hidden; }
+
+  video { width:100%; height:100%; object-fit:cover; display:block; }
+  canvas { display:none; }
+
+  .camera-placeholder {
+    position:absolute; inset:0; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:16px;
+    background:rgba(2,11,24,0.95);
+  }
+  .camera-placeholder-icon { font-size:56px; opacity:0.4; }
+  .camera-placeholder-text { font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--white-dim); }
+
+  /* Alert overlay */
+  .alert-overlay {
+    position:absolute; top:0; left:0; right:0;
+    padding:12px 20px; display:flex; align-items:center; gap:10px;
+    font-family:'Rajdhani',sans-serif; font-size:20px; font-weight:700;
+    opacity:0; transition:opacity 0.3s; pointer-events:none;
+  }
+  .alert-overlay.danger { background:rgba(255,59,59,0.85); color:white; opacity:1; }
+  .alert-overlay.safe { background:rgba(0,230,118,0.85); color:#003320; opacity:1; }
+
+  /* Scan line animation */
+  .scan-line {
+    position:absolute; left:0; right:0; height:2px;
+    background:linear-gradient(90deg, transparent, var(--cyan), transparent);
+    top:0; opacity:0; pointer-events:none;
+  }
+  .scan-line.scanning {
+    animation:scanDown 1s ease-in-out;
+    opacity:1;
+  }
+  @keyframes scanDown { from{top:0;opacity:1} to{top:100%;opacity:0} }
+
+  .camera-footer { padding:16px 24px; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+
+  .scan-timer { font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--white-dim); }
+  .scan-timer span { color:var(--cyan); font-size:16px; font-weight:600; }
+
+  .btn-start { padding:10px 24px; background:var(--green-ok); color:#003320; border:none; border-radius:6px; font-family:'Rajdhani',sans-serif; font-size:16px; font-weight:700; cursor:pointer; transition:all 0.2s; letter-spacing:0.5px; }
+  .btn-start:hover { transform:translateY(-1px); box-shadow:0 4px 16px rgba(0,230,118,0.3); }
+  .btn-stop { padding:10px 24px; background:var(--red-alert); color:white; border:none; border-radius:6px; font-family:'Rajdhani',sans-serif; font-size:16px; font-weight:700; cursor:pointer; transition:all 0.2s; display:none; }
+  .btn-stop:hover { transform:translateY(-1px); box-shadow:0 4px 16px rgba(255,59,59,0.3); }
+
+  /* Right panel */
+  .right-panel { display:flex; flex-direction:column; gap:16px; }
+
+  .status-card { background:var(--card-bg); border:1px solid var(--border); border-radius:8px; padding:20px 24px; }
+  .status-card-title { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--white-dim); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+
+  .stat-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .stat-box { background:rgba(0,102,204,0.06); border:1px solid var(--border); border-radius:6px; padding:12px 16px; }
+  .stat-box-label { font-size:10px; font-family:'IBM Plex Mono',monospace; color:var(--white-dim); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .stat-box-value { font-family:'Rajdhani',sans-serif; font-size:24px; font-weight:700; }
+  .stat-box-value.green { color:var(--green-ok); }
+  .stat-box-value.red { color:var(--red-alert); }
+  .stat-box-value.blue { color:var(--cyan); }
+  .stat-box-value.yellow { color:var(--yellow-warn); }
+
+  /* Detection result */
+  .detection-card { background:var(--card-bg); border:1px solid var(--border); border-radius:8px; padding:20px 24px; }
+  .detection-card-title { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--white-dim); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+  .detection-empty { font-size:13px; color:var(--white-dim); font-family:'IBM Plex Mono',monospace; text-align:center; padding:20px; }
+
+  .detection-item { background:rgba(0,102,204,0.06); border:1px solid var(--border); border-radius:6px; padding:12px 14px; display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+  .detection-name { font-family:'Rajdhani',sans-serif; font-size:16px; font-weight:700; }
+  .detection-right { display:flex; align-items:center; gap:10px; }
+  .conf-val { font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--cyan); }
+  .sev-badge { font-size:10px; font-family:'IBM Plex Mono',monospace; padding:2px 8px; border-radius:3px; text-transform:uppercase; }
+  .sev-badge.Critical { background:rgba(255,59,59,0.2); color:var(--red-alert); border:1px solid rgba(255,59,59,0.3); }
+  .sev-badge.High { background:rgba(255,150,0,0.2); color:#ff9600; border:1px solid rgba(255,150,0,0.3); }
+  .sev-badge.Medium { background:rgba(255,204,0,0.15); color:var(--yellow-warn); border:1px solid rgba(255,204,0,0.3); }
+  .sev-badge.Low { background:rgba(0,230,118,0.1); color:var(--green-ok); border:1px solid rgba(0,230,118,0.2); }
+
+  /* Log */
+  .log-card { background:var(--card-bg); border:1px solid var(--border); border-radius:8px; padding:20px 24px; }
+  .log-card-title { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--white-dim); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+  .log-box { height:160px; overflow-y:auto; display:flex; flex-direction:column; gap:4px; }
+  .log-entry { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--white-dim); line-height:1.5; }
+  .log-entry .t { color:var(--blue-bright); }
+  .log-entry.ok { color:var(--green-ok); }
+  .log-entry.alert { color:var(--red-alert); }
+
+  .location-input { width:100%; background:rgba(0,102,204,0.08); border:1px solid var(--border); border-radius:6px; padding:10px 14px; color:var(--white); font-family:'IBM Plex Sans',sans-serif; font-size:13px; outline:none; transition:border-color 0.2s; margin-top:8px; }
+  .location-input:focus { border-color:var(--blue-bright); }
+  .location-input::placeholder { color:var(--white-dim); }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">🛣️</div>
+    <span class="nav-logo-text">Smart<span>Road</span> AI</span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="detect.html">Detect</a>
+    <a href="monitor.html" class="active">Live</a>
+    <a href="traffic.html">Traffic</a>
+    <a href="reports.html">Reports</a>
+  </div>
+  <div class="nav-status" id="navStatus">SYSTEM ONLINE</div>
+</nav>
+
+<div class="page">
+  <div class="page-header">
+    <div class="page-label">// Module 01</div>
+    <h1 class="page-title">Live <span>Monitor</span></h1>
+    <p class="page-subtitle">Real-time camera monitoring with YOLOv11 AI — directly in your browser.</p>
+  </div>
+
+  <div class="monitor-grid">
+
+    <!-- Camera -->
+    <div class="camera-panel">
+      <div class="camera-header">
+        <div class="camera-header-left">
+          <div class="rec-dot" id="recDot" style="opacity:0.3"></div>
+          LIVE CAMERA FEED
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--white-dim)" id="cameraTime">--:--:--</div>
+      </div>
+
+      <div class="camera-wrap">
+        <video id="video" autoplay muted playsinline></video>
+        <canvas id="canvas"></canvas>
+        <div class="camera-placeholder" id="placeholder">
+          <span class="camera-placeholder-icon">📷</span>
+          <span class="camera-placeholder-text">Click START MONITORING to begin</span>
+        </div>
+        <div class="alert-overlay" id="alertOverlay"></div>
+        <div class="scan-line" id="scanLine"></div>
+      </div>
+
+      <div class="camera-footer">
+        <div class="scan-timer">Next scan in: <span id="countdown">--</span>s</div>
+        <div style="display:flex;gap:10px">
+          <button class="btn-start" id="btnStart" onclick="startMonitoring()">▶ START MONITORING</button>
+          <button class="btn-stop" id="btnStop" onclick="stopMonitoring()">⏹ STOP</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right panel -->
+    <div class="right-panel">
+
+      <!-- Location -->
+      <div class="status-card">
+        <div class="status-card-title">📍 Location</div>
+        <input type="text" class="location-input" id="locationInput" placeholder="e.g. Market Chowk, Solapur" value="Solapur, Maharashtra">
+      </div>
+
+      <!-- Stats -->
+      <div class="status-card">
+        <div class="status-card-title">📊 Session Stats</div>
+        <div class="stat-row">
+          <div class="stat-box">
+            <div class="stat-box-label">Scans Done</div>
+            <div class="stat-box-value blue" id="scanCount">0</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-box-label">Potholes Found</div>
+            <div class="stat-box-value red" id="potholeCount">0</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-box-label">Reports Saved</div>
+            <div class="stat-box-value green" id="reportCount">0</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-box-label">Status</div>
+            <div class="stat-box-value yellow" id="statusVal">IDLE</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Latest detection -->
+      <div class="detection-card">
+        <div class="detection-card-title">🔍 Latest Detection</div>
+        <div id="detectionContent">
+          <div class="detection-empty">No detections yet</div>
+        </div>
+      </div>
+
+      <!-- Log -->
+      <div class="log-card">
+        <div class="log-card-title">📟 Activity Log</div>
+        <div class="log-box" id="logBox">
+          <div class="log-entry"><span class="t">[--:--:--]</span> System ready. Click Start to begin.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  const BACKEND = 'http://127.0.0.1:5000';
+  const SCAN_INTERVAL = 5;
+
+  let stream = null;
+  let monitorInterval = null;
+  let countdownInterval = null;
+  let scanCount = 0;
+  let potholeCount = 0;
+  let reportCount = 0;
+  let countdown = SCAN_INTERVAL;
+  let isMonitoring = false;
+
+  // Clock
+  setInterval(() => {
+    document.getElementById('cameraTime').textContent = new Date().toLocaleTimeString();
+  }, 1000);
+
+  function getTime() {
+    return new Date().toLocaleTimeString('en-GB', { hour12: false });
+  }
+
+  function addLog(msg, type = '') {
+    const box = document.getElementById('logBox');
+    const entry = document.createElement('div');
+    entry.className = `log-entry ${type}`;
+    entry.innerHTML = `<span class="t">[${getTime()}]</span> ${msg}`;
+    box.appendChild(entry);
+    box.scrollTop = box.scrollHeight;
+  }
+
+  async function startMonitoring() {
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const video = document.getElementById('video');
+      video.srcObject = stream;
+
+      document.getElementById('placeholder').style.display = 'none';
+      document.getElementById('btnStart').style.display = 'none';
+      document.getElementById('btnStop').style.display = 'block';
+      document.getElementById('recDot').style.opacity = '1';
+      document.getElementById('statusVal').textContent = 'LIVE';
+      document.getElementById('statusVal').className = 'stat-box-value green';
+
+      isMonitoring = true;
+      countdown = SCAN_INTERVAL;
+      addLog('📷 Camera opened successfully', 'ok');
+      addLog('🔍 Monitoring started — scanning every 5s');
+
+      // Countdown timer
+      countdownInterval = setInterval(() => {
+        countdown--;
+        document.getElementById('countdown').textContent = countdown;
+        if (countdown <= 0) countdown = SCAN_INTERVAL;
+      }, 1000);
+
+      // Detection interval
+      setTimeout(runDetection, 1000);
+      monitorInterval = setInterval(runDetection, SCAN_INTERVAL * 1000);
+
+    } catch(err) {
+      addLog('❌ Camera access denied!', 'alert');
+      alert('Camera access denied. Please allow camera permission and try again.');
+    }
+  }
+
+  function stopMonitoring() {
+    isMonitoring = false;
+    if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+    if (monitorInterval) clearInterval(monitorInterval);
+    if (countdownInterval) clearInterval(countdownInterval);
+
+    document.getElementById('video').srcObject = null;
+    document.getElementById('placeholder').style.display = 'flex';
+    document.getElementById('btnStart').style.display = 'block';
+    document.getElementById('btnStop').style.display = 'none';
+    document.getElementById('recDot').style.opacity = '0.3';
+    document.getElementById('alertOverlay').className = 'alert-overlay';
+    document.getElementById('alertOverlay').textContent = '';
+    document.getElementById('countdown').textContent = '--';
+    document.getElementById('statusVal').textContent = 'IDLE';
+    document.getElementById('statusVal').className = 'stat-box-value yellow';
+
+    addLog('⏹️ Monitoring stopped');
+  }
+
+  async function runDetection() {
+    if (!isMonitoring) return;
+
+    // Trigger scan line animation
+    const scanLine = document.getElementById('scanLine');
+    scanLine.className = 'scan-line';
+    void scanLine.offsetWidth;
+    scanLine.className = 'scan-line scanning';
+
+    // Capture frame from video
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    canvas.width = video.videoWidth || 640;
+    canvas.height = video.videoHeight || 480;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0);
+
+    // Convert to blob
+    canvas.toBlob(async (blob) => {
+      scanCount++;
+      document.getElementById('scanCount').textContent = scanCount;
+      addLog(`🔍 Running scan #${scanCount}...`);
+
+      const formData = new FormData();
+      formData.append('image', blob, 'frame.jpg');
+
+      try {
+        const response = await fetch(`${BACKEND}/detect`, { method: 'POST', body: formData });
+        const result = await response.json();
+        handleResult(result);
+      } catch(err) {
+        addLog('⚠️ Backend offline — start app.py!', 'alert');
+        document.getElementById('alertOverlay').className = 'alert-overlay';
+        document.getElementById('alertOverlay').textContent = '';
+      }
+    }, 'image/jpeg', 0.85);
+  }
+
+  function handleResult(result) {
+    const overlay = document.getElementById('alertOverlay');
+
+    if (result.damage_found) {
+      potholeCount += result.total_detections;
+      reportCount++;
+      document.getElementById('potholeCount').textContent = potholeCount;
+      document.getElementById('reportCount').textContent = reportCount;
+
+      overlay.className = 'alert-overlay danger';
+      overlay.innerHTML = `⚠️ POTHOLE DETECTED: ${result.total_detections} FOUND`;
+
+      addLog(`⚠️ POTHOLE DETECTED! ${result.total_detections} potholes found`, 'alert');
+      addLog(`📋 Report auto-saved to reports folder`, 'ok');
+
+      // Update detection panel
+      let html = '';
+      result.detections.forEach((d, i) => {
+        html += `<div class="detection-item">
+          <div class="detection-name">${d.class.toUpperCase()} #${i+1}</div>
+          <div class="detection-right">
+            <div class="conf-val">${d.confidence}%</div>
+            <div class="sev-badge ${d.severity}">${d.severity}</div>
+          </div>
+        </div>`;
+      });
+      document.getElementById('detectionContent').innerHTML = html;
+
+      // Auto save report via backend
+      const location = document.getElementById('locationInput').value || 'Solapur, Maharashtra';
+      fetch(`${BACKEND}/report`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ detection_result: result, location })
+      }).catch(() => {});
+
+      // Clear alert after 4 seconds
+      setTimeout(() => {
+        overlay.className = 'alert-overlay safe';
+        overlay.innerHTML = '✅ MONITORING...';
+        setTimeout(() => { overlay.className = 'alert-overlay'; overlay.textContent = ''; }, 2000);
+      }, 4000);
+
+    } else {
+      overlay.className = 'alert-overlay safe';
+      overlay.innerHTML = '✅ ROAD CLEAR';
+      addLog('✅ No damage detected', 'ok');
+      document.getElementById('detectionContent').innerHTML = '<div class="detection-empty">✅ Road clear — no damage</div>';
+      setTimeout(() => { overlay.className = 'alert-overlay'; overlay.textContent = ''; }, 2000);
+    }
+  }
+</script>
+</body>
+</html>

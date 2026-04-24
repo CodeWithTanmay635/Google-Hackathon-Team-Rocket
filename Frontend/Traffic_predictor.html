@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>SmartRoad AI - Traffic Predictor</title>
+    <link rel="icon" href="data:," />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&amp;family=IBM+Plex+Sans:wght@300;400;500&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#00783a",
+                        "inverse-on-surface": "#26313f",
+                        "secondary": "#a2e7ff",
+                        "on-surface-variant": "#c1c6d5",
+                        "on-background": "#d8e3f6",
+                        "tertiary-fixed": "#62ff96",
+                        "surface": "#091421",
+                        "error": "#ffb4ab",
+                        "on-secondary-fixed": "#001f27",
+                        "surface-tint": "#aac7ff",
+                        "on-tertiary-fixed-variant": "#005226",
+                        "primary-fixed-dim": "#aac7ff",
+                        "on-secondary-container": "#005669",
+                        "surface-bright": "#2f3a49",
+                        "outline": "#8b919e",
+                        "on-primary-fixed-variant": "#00458e",
+                        "surface-variant": "#2b3544",
+                        "surface-container-high": "#202b39",
+                        "primary": "#aac7ff",
+                        "error-container": "#93000a",
+                        "primary-fixed": "#d7e3ff",
+                        "surface-container-low": "#111c2a",
+                        "surface-dim": "#091421",
+                        "secondary-fixed": "#b4ebff",
+                        "surface-container": "#16202e",
+                        "inverse-primary": "#005cba",
+                        "on-primary": "#002f65",
+                        "surface-container-highest": "#2b3544",
+                        "tertiary": "#00e475",
+                        "secondary-fixed-dim": "#3cd7ff",
+                        "on-secondary-fixed-variant": "#004e5f",
+                        "outline-variant": "#414753",
+                        "on-surface": "#d8e3f6",
+                        "on-tertiary": "#003918",
+                        "inverse-surface": "#d8e3f6",
+                        "on-error": "#690005",
+                        "secondary-container": "#00d2fd",
+                        "surface-container-lowest": "#040f1c",
+                        "tertiary-fixed-dim": "#00e475",
+                        "on-tertiary-fixed": "#00210b",
+                        "on-tertiary-container": "#8fffab",
+                        "on-secondary": "#003642",
+                        "on-error-container": "#ffdad6",
+                        "on-primary-container": "#dfe8ff",
+                        "on-primary-fixed": "#001b3e",
+                        "primary-container": "#0066cc",
+                        "background": "#091421"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Rajdhani"],
+                        "body": ["IBM Plex Sans"],
+                        "mono": ["IBM Plex Mono"]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            background-color: #020b18;
+            background-image: linear-gradient(rgba(0, 102, 204, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 102, 204, 0.03) 1px, transparent 1px);
+            background-size: 32px 32px;
+            font-family: 'IBM Plex Sans', sans-serif;
+        }
+
+        .rajdhani {
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        .mono {
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body class="text-on-background min-h-screen pb-20">
+    <!-- TopAppBar -->
+    <nav
+        class="fixed top-0 w-full z-50 bg-[#091421]/70 backdrop-blur-xl border-b border-[#0066cc]/30 flex justify-between items-center px-8 h-16 w-full">
+        <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-[#aac7ff]">add_road</span>
+            <span class="text-2xl font-bold text-[#d8e3f6] font-['Rajdhani'] uppercase tracking-wider">SmartRoad
+                AI</span>
+        </div>
+        <div class="hidden md:flex items-center gap-8 font-['IBM_Plex_Mono'] text-xs uppercase">
+            <a class="text-[#d8e3f6]/60 hover:text-[#aac7ff] transition-colors" href="stich.html">Home</a>
+            <a class="text-[#d8e3f6]/60 hover:text-[#aac7ff] transition-colors" href="Analyer.html">Detect</a>
+            <a class="text-[#d8e3f6]/60 hover:text-[#aac7ff] transition-colors" href="live.html">Live</a>
+            <a class="text-[#0066cc] border-b-2 border-[#0066cc] pb-1 font-bold" href="Traffic_predictor.html">Traffic</a>
+            <a class="text-[#d8e3f6]/60 hover:text-[#aac7ff] transition-colors" href="reports_tracker.html">Reports</a>
+        </div>
+        <div class="flex items-center gap-4">
+            <span class="text-[#aac7ff] font-['Rajdhani'] uppercase tracking-wider text-sm font-bold">SYSTEM
+                ONLINE</span>
+        </div>
+    </nav>
+    <main class="pt-32 max-w-3xl mx-auto px-6">
+        <!-- Page Header -->
+        <header class="mb-12 text-center">
+            <div class="mono text-[10px] text-primary tracking-[0.2em] mb-2">// PREDICTIVE_ANALYTICS_MODULE</div>
+            <h1 class="rajdhani text-5xl font-bold text-on-background uppercase tracking-tight">Traffic Predictor</h1>
+            <p class="text-on-surface-variant mt-4 font-light">Utilizing orbital data and ground sensors to forecast
+                urban congestion cycles.</p>
+        </header>
+        <!-- Input Card -->
+        <section
+            class="bg-surface-container-low p-8 rounded-lg mb-12 shadow-2xl shadow-black/40 relative overflow-hidden">
+            <!-- Decorative corner accent -->
+            <div class="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-primary/20 pointer-events-none">
+            </div>
+            <form class="space-y-8">
+                <div>
+                    <label class="mono text-[10px] text-outline mb-4 block tracking-widest uppercase">//
+                        SELECT_TARGET_AREA</label>
+                    <input id="tp-area"
+                        class="w-full bg-surface-container-lowest border-b border-outline-variant focus:border-secondary outline-none py-3 px-4 text-on-surface transition-all placeholder:text-outline/40"
+                        placeholder="Enter street or landmark name..." type="text" />
+                    <div class="flex flex-wrap gap-2 mt-4">
+                        <button
+                            class="mono text-[10px] px-3 py-1.5 rounded bg-surface-container-high border border-outline-variant/20 hover:border-primary/50 text-on-surface-variant hover:text-primary transition-all"
+                            type="button">Market Chowk</button>
+                        <button
+                            class="mono text-[10px] px-3 py-1.5 rounded bg-surface-container-high border border-outline-variant/20 hover:border-primary/50 text-on-surface-variant hover:text-primary transition-all"
+                            type="button">Railway Station</button>
+                        <button
+                            class="mono text-[10px] px-3 py-1.5 rounded bg-surface-container-high border border-outline-variant/20 hover:border-primary/50 text-on-surface-variant hover:text-primary transition-all"
+                            type="button">Highway NH9</button>
+                        <button
+                            class="mono text-[10px] px-3 py-1.5 rounded bg-surface-container-high border border-outline-variant/20 hover:border-primary/50 text-on-surface-variant hover:text-primary transition-all"
+                            type="button">Hotgi Road</button>
+                        <button
+                            class="mono text-[10px] px-3 py-1.5 rounded bg-surface-container-high border border-outline-variant/20 hover:border-primary/50 text-on-surface-variant hover:text-primary transition-all"
+                            type="button">Residential Colony</button>
+                    </div>
+                </div>
+                <div>
+                    <label class="mono text-[10px] text-outline mb-4 block tracking-widest uppercase">//
+                        TEMPORAL_WINDOW</label>
+                    <select id="tp-time"
+                        class="w-full bg-surface-container-lowest border-b border-outline-variant focus:border-secondary outline-none py-3 px-4 text-on-surface transition-all appearance-none cursor-pointer">
+                        <option value="8am">Morning</option>
+                        <option value="noon">Afternoon</option>
+                        <option value="6pm">Evening</option>
+                        <option value="night">Night</option>
+                    </select>
+                </div>
+                <button type="button" id="tp-submit"
+                    class="w-full bg-gradient-to-b from-primary to-primary-container text-on-primary font-bold py-4 rounded-lg rajdhani tracking-widest text-lg hover:shadow-[0_0_12px_rgba(0,102,204,0.4)] transition-all active:scale-[0.98]">
+                    PREDICT TRAFFIC
+                </button>
+            </form>
+        </section>
+        <!-- Results Section -->
+        <section class="space-y-6">
+            <!-- Congestion Box -->
+            <div id="res-bg" class="bg-surface-container-low border border-outline-variant/10 p-10 rounded-lg text-center relative hidden">
+                <div class="absolute inset-0 bg-gradient-to-tr from-error/5 to-transparent pointer-events-none"></div>
+                <div class="mono text-[10px] text-outline tracking-[0.3em] mb-2 uppercase">// CONGESTION LEVEL</div>
+                <div id="res-level" class="rajdhani text-7xl font-bold text-on-surface leading-none mb-6">---</div>
+                <div id="res-suggest" class="mono text-xs text-on-surface-variant max-w-md mx-auto">
+                    ---
+                </div>
+            </div>
+            <!-- Info Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Area Card -->
+                <div class="bg-surface-container p-6 rounded-lg border border-outline-variant/10">
+                    <div class="mono text-[10px] text-outline mb-3 tracking-widest uppercase">// AREA</div>
+                    <div id="res-area" class="text-on-surface font-medium text-lg">---</div>
+                </div>
+                <!-- Time Card -->
+                <div class="bg-surface-container p-6 rounded-lg border border-outline-variant/10">
+                    <div class="mono text-[10px] text-outline mb-3 tracking-widest uppercase">// TIME</div>
+                    <div id="res-time" class="text-on-surface font-medium text-lg">---</div>
+                </div>
+                <!-- Alternate Card -->
+                <div class="bg-surface-container col-span-1 md:col-span-2 p-6 rounded-lg border border-outline-variant/10">
+                    <div class="mono text-[10px] text-outline mb-3 tracking-widest uppercase">// ALTERNATE_ROUTE</div>
+                    <div id="res-alt" class="text-secondary font-medium text-lg">---</div>
+                </div>
+            </div>
+        </section>
+        <!-- Footer -->
+        <footer
+            class="mt-20 py-8 border-t border-[#414753]/10 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="mono text-[10px] text-[#414753] tracking-tighter uppercase">© 2024 SMARTROAD AI // MISSION
+                CRITICAL SYSTEMS</div>
+            <div class="flex gap-8 mono text-[10px] text-[#414753] tracking-tighter uppercase">
+                <span
+                    class="hover:text-[#0066cc] cursor-pointer transition-opacity opacity-70 hover:opacity-100">Status:
+                    Nominal</span>
+                <span
+                    class="hover:text-[#0066cc] cursor-pointer transition-opacity opacity-70 hover:opacity-100">Terminal
+                    Access</span>
+                <span
+                    class="hover:text-[#0066cc] cursor-pointer transition-opacity opacity-70 hover:opacity-100">Protocol
+                    v4.2</span>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        document.getElementById('tp-submit').addEventListener('click', async () => {
+            const area = document.getElementById('tp-area').value || "Market Chowk";
+            const time = document.getElementById('tp-time').value;
+
+            document.getElementById('tp-submit').innerText = 'PREDICTING...';
+
+            try {
+                const response = await fetch('/traffic', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ area, time })
+                });
+
+                const data = await response.json();
+                
+                if (data.error) throw new Error(data.error);
+
+                // Update UI
+                const resBg = document.getElementById('res-bg');
+                resBg.classList.remove('hidden');
+                
+                const levelEl = document.getElementById('res-level');
+                levelEl.innerText = data.congestion_level.toUpperCase();
+                
+                if (data.congestion_level === 'Very High' || data.congestion_level === 'High') {
+                    resBg.className = 'bg-error-container/20 border border-error/20 p-10 rounded-lg text-center relative';
+                    levelEl.className = 'rajdhani text-7xl font-bold text-error leading-none mb-6';
+                } else if (data.congestion_level === 'Medium') {
+                    resBg.className = 'bg-yellow-500/10 border border-yellow-500/20 p-10 rounded-lg text-center relative';
+                    levelEl.className = 'rajdhani text-7xl font-bold text-yellow-500 leading-none mb-6';
+                } else {
+                    resBg.className = 'bg-tertiary-container/20 border border-tertiary/20 p-10 rounded-lg text-center relative';
+                    levelEl.className = 'rajdhani text-7xl font-bold text-tertiary leading-none mb-6';
+                }
+
+                document.getElementById('res-suggest').innerText = data.suggestion.toUpperCase();
+                document.getElementById('res-area').innerText = data.area.toUpperCase();
+                document.getElementById('res-time').innerText = data.time.toUpperCase();
+                document.getElementById('res-alt').innerText = data.alternate_route.toUpperCase();
+
+            } catch (err) {
+                alert("Prediction Error: " + err.message);
+            } finally {
+                document.getElementById('tp-submit').innerText = 'PREDICT TRAFFIC';
+            }
+        });
+
+        // Setup shortcut buttons
+        const btnGroup = document.querySelectorAll('button[type="button"].mono.text-\\[10px\\]');
+        btnGroup.forEach(btn => {
+            if(btn.id !== 'tp-submit'){
+                btn.addEventListener('click', () => {
+                    document.getElementById('tp-area').value = btn.innerText;
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

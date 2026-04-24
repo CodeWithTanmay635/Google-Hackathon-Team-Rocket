@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Live Monitor - SmartRoad AI</title>
+    <link rel="icon" href="data:," />
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&amp;family=IBM+Plex+Sans:wght@300;400;500&amp;family=IBM+Plex+Mono:wght@400;500&amp;family=Space+Grotesk:wght@400;700&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#00783a",
+                        "inverse-on-surface": "#26313f",
+                        "secondary": "#a2e7ff",
+                        "on-surface-variant": "#c1c6d5",
+                        "on-background": "#d8e3f6",
+                        "tertiary-fixed": "#62ff96",
+                        "surface": "#091421",
+                        "error": "#ffb4ab",
+                        "on-secondary-fixed": "#001f27",
+                        "surface-tint": "#aac7ff",
+                        "on-tertiary-fixed-variant": "#005226",
+                        "primary-fixed-dim": "#aac7ff",
+                        "on-secondary-container": "#005669",
+                        "surface-bright": "#2f3a49",
+                        "outline": "#8b919e",
+                        "on-primary-fixed-variant": "#00458e",
+                        "surface-variant": "#2b3544",
+                        "surface-container-high": "#202b39",
+                        "primary": "#aac7ff",
+                        "error-container": "#93000a",
+                        "primary-fixed": "#d7e3ff",
+                        "surface-container-low": "#111c2a",
+                        "surface-dim": "#091421",
+                        "secondary-fixed": "#b4ebff",
+                        "surface-container": "#16202e",
+                        "inverse-primary": "#005cba",
+                        "on-primary": "#002f65",
+                        "surface-container-highest": "#2b3544",
+                        "tertiary": "#00e475",
+                        "secondary-fixed-dim": "#3cd7ff",
+                        "on-secondary-fixed-variant": "#004e5f",
+                        "outline-variant": "#414753",
+                        "on-surface": "#d8e3f6",
+                        "on-tertiary": "#003918",
+                        "inverse-surface": "#d8e3f6",
+                        "on-error": "#690005",
+                        "secondary-container": "#00d2fd",
+                        "surface-container-lowest": "#040f1c",
+                        "tertiary-fixed-dim": "#00e475",
+                        "on-tertiary-fixed": "#00210b",
+                        "on-tertiary-container": "#8fffab",
+                        "on-secondary": "#003642",
+                        "on-error-container": "#ffdad6",
+                        "on-primary-container": "#dfe8ff",
+                        "on-primary-fixed": "#001b3e",
+                        "primary-container": "#0066cc",
+                        "background": "#091421"
+                    },
+                    "fontFamily": {
+                        "headline": ["Rajdhani", "sans-serif"],
+                        "body": ["IBM Plex Sans", "sans-serif"],
+                        "mono": ["IBM Plex Mono", "monospace"]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            background-color: #091421;
+            background-image: radial-gradient(#414753 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+            color: #d8e3f6;
+            min-height: max(884px, 100dvh);
+        }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+
+<body class="font-body selection:bg-primary-container/30">
+    <!-- TopAppBar -->
+    <header class="fixed top-0 w-full z-50 bg-[#091421]/70 backdrop-blur-xl border-b border-[#0066cc]/30 flex justify-between items-center px-8 h-16 w-full">
+        <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-[#aac7ff]">add_road</span>
+            <span class="text-2xl font-bold text-[#d8e3f6] font-headline uppercase tracking-wider">SmartRoad AI</span>
+        </div>
+        <nav class="hidden md:flex gap-8">
+            <a class="text-[#d8e3f6]/40 hover:text-[#aac7ff] transition-colors font-mono text-xs uppercase tracking-widest" href="stich.html">Home</a>
+            <a class="text-[#d8e3f6]/60 hover:text-[#aac7ff] transition-colors font-mono text-xs uppercase tracking-widest" href="Analyer.html">Detect</a>
+            <a class="text-[#0066cc] border-b-2 border-[#0066cc] pb-1 font-bold font-mono text-xs uppercase tracking-widest" href="live.html">Live</a>
+            <a class="text-[#d8e3f6]/60 hover:text-[#aac7ff] transition-colors font-mono text-xs uppercase tracking-widest" href="Traffic_predictor.html">Traffic</a>
+            <a class="text-[#d8e3f6]/60 hover:text-[#aac7ff] transition-colors font-mono text-xs uppercase tracking-widest" href="reports_tracker.html">Reports</a>
+        </nav>
+        <div class="flex items-center gap-2 px-3 py-1 bg-primary-container/10 border border-primary-container/30 rounded">
+            <span class="w-2 h-2 rounded-full bg-error animate-pulse"></span>
+            <span class="text-[10px] font-mono text-[#aac7ff] tracking-tighter">FEED LIVE</span>
+        </div>
+    </header>
+
+    <main class="pt-24 pb-12 px-6 md:px-12 max-w-6xl mx-auto">
+        <!-- Hero Header -->
+        <div class="mb-12 flex justify-between items-end">
+            <div>
+                <p class="font-mono text-xs text-primary mb-2 tracking-[0.2em] uppercase">// REALTIME_VIDEO_STREAM</p>
+                <h1 class="text-5xl font-headline font-bold text-on-background tracking-tight uppercase">Live Camera Feed</h1>
+            </div>
+            <div class="flex items-center gap-3 hidden md:flex">
+                <span class="w-3 h-3 rounded-full bg-error animate-pulse shadow-[0_0_8px_#ffb4ab]"></span>
+                <span class="font-mono text-sm tracking-widest text-error">REC / LIVE</span>
+            </div>
+        </div>
+
+        <div class="bg-surface-container rounded-lg p-2 border border-outline-variant/10 shadow-2xl relative overflow-hidden aspect-video">
+            <img id="live-stream-img" class="w-full h-full object-contain bg-black rounded" src="/video_feed" alt="Live Video Feed" onerror="this.onerror=null; this.src=''; this.alt='Stream disconnected or loading...'" />
+            
+            <!-- Overlay Info -->
+            <div class="absolute top-6 left-6 font-mono text-[10px] text-white/70 bg-black/50 px-2 py-1 rounded backdrop-blur border border-white/10 tracking-widest uppercase">
+                CAM_01: SOLAPUR MARKET CHOWK
+            </div>
+        </div>
+        
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-surface-container p-6 rounded border border-outline-variant/10">
+                <div class="font-mono text-[10px] text-outline mb-2 tracking-widest uppercase">// STATUS</div>
+                <div class="text-on-surface font-medium text-lg text-tertiary">SYSTEM ACTIVE</div>
+            </div>
+            <div class="bg-surface-container p-6 rounded border border-outline-variant/10">
+                <div class="font-mono text-[10px] text-outline mb-2 tracking-widest uppercase">// DETECTION MODE</div>
+                <div class="text-on-surface font-medium text-lg">YOLOv11 - Continuous</div>
+            </div>
+            <div class="bg-surface-container p-6 rounded border border-outline-variant/10">
+                <div class="font-mono text-[10px] text-outline mb-2 tracking-widest uppercase">// REPORT DISPATCH</div>
+                <div class="text-on-surface font-medium text-lg">Auto-enabled</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full py-4 border-t border-[#414753]/10 bg-[#040f1c] flex justify-between px-12 items-center mt-24">
+        <span class="font-mono text-[10px] tracking-tighter text-[#414753]">© 2024 SMARTROAD AI // MISSION CRITICAL SYSTEMS</span>
+        <div class="flex gap-6">
+            <span class="font-mono text-[10px] tracking-tighter text-[#414753]">Status: Nominal</span>
+        </div>
+    </footer>
+</body>
+</html>
