@@ -9,4 +9,3 @@ services:
         value: 5000
       - key: PYTHON_VERSION
         value: 3.10.0
-        Root Directory: Backend
