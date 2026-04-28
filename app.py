@@ -46,6 +46,14 @@ def home():
 def serve_frontend(filename):
     # Only serve html, css, js files when Frontend is available
     if FRONTEND_AVAILABLE and filename.endswith(('.html', '.css', '.js', '.png', '.jpg', '.ico')):
+        # Case-insensitive file lookup (Linux is case-sensitive)
+        try:
+            actual_files = os.listdir(FRONTEND_DIR)
+            for f in actual_files:
+                if f.lower() == filename.lower():
+                    return send_from_directory(FRONTEND_DIR, f)
+        except Exception:
+            pass
         return send_from_directory(FRONTEND_DIR, filename)
     return jsonify({'error': 'Not found'}), 404
 
