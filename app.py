@@ -27,16 +27,26 @@ except Exception as e:
 app = Flask(__name__)
 CORS(app)
 
+# ✅ Resolve Frontend path (works locally + on Render)
+FRONTEND_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'Frontend')
+FRONTEND_AVAILABLE = os.path.isdir(FRONTEND_DIR)
+
 # ✅ Serve Frontend Pages
 @app.route('/')
 def home():
-    return send_from_directory('../Frontend', 'index.html')
+    if FRONTEND_AVAILABLE:
+        return send_from_directory(FRONTEND_DIR, 'index.html')
+    return jsonify({
+        'status': 'online',
+        'service': 'SmartRoad AI Backend',
+        'message': 'API is running 🚀. Use /status for available endpoints.',
+    })
 
 @app.route('/<path:filename>')
 def serve_frontend(filename):
-    # Only serve html, css, js files
-    if filename.endswith(('.html', '.css', '.js', '.png', '.jpg', '.ico')):
-        return send_from_directory('../Frontend', filename)
+    # Only serve html, css, js files when Frontend is available
+    if FRONTEND_AVAILABLE and filename.endswith(('.html', '.css', '.js', '.png', '.jpg', '.ico')):
+        return send_from_directory(FRONTEND_DIR, filename)
     return jsonify({'error': 'Not found'}), 404
 
 # ✅ Detect Route
