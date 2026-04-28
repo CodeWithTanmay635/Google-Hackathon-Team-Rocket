@@ -49,9 +49,9 @@ def serve_frontend(filename):
         # Case-insensitive file lookup (Linux is case-sensitive)
         try:
             actual_files = os.listdir(FRONTEND_DIR)
-            for f in actual_files:
-                if f.lower() == filename.lower():
-                    return send_from_directory(FRONTEND_DIR, f)
+            match = next((f for f in actual_files if f.lower() == filename.lower()), None)
+            if match:
+                return send_from_directory(FRONTEND_DIR, match)
         except Exception:
             pass
         return send_from_directory(FRONTEND_DIR, filename)
